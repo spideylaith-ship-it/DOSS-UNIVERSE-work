@@ -1,0 +1,2034 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DOSS UNIVERSE // ENTERPRISE SUITE v3.0</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Inter:wght@400;500;600;700;800&family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+  <!-- html2pdf & html2canvas for A4 PDF & PNG Exports -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+  <style>
+    :root {
+      --font-ar: 'Tajawal', sans-serif;
+      --font-en: 'Inter', sans-serif;
+      --font-logo: 'Cinzel', serif;
+    }
+    body {
+      font-family: var(--font-ar);
+      transition: background-color 0.35s ease, color 0.35s ease;
+    }
+    .font-en { font-family: var(--font-en); }
+    .doss-logo { font-family: var(--font-logo); letter-spacing: 0.1em; line-height: 1; }
+    .doss-sub { font-family: var(--font-en); letter-spacing: 0.42em; font-size: 0.62rem; }
+
+    /* ==========================================
+       THEME 1: SOURCING & IMPORT (Monochrome Light)
+       ========================================== */
+    body.theme-sourcing {
+      background-color: #F4F4F5;
+      color: #09090B;
+    }
+    body.theme-sourcing .suite-card {
+      background-color: #FFFFFF;
+      border: 1px solid #E4E4E7;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+    }
+    body.theme-sourcing input,
+    body.theme-sourcing select,
+    body.theme-sourcing textarea {
+      background-color: #FFFFFF;
+      border: 1px solid #D4D4D8;
+      color: #09090B;
+      border-radius: 0.5rem;
+      padding: 0.55rem 0.75rem;
+      width: 100%;
+      font-size: 0.9rem;
+      transition: all 0.2s;
+    }
+    body.theme-sourcing input:focus,
+    body.theme-sourcing select:focus,
+    body.theme-sourcing textarea:focus {
+      outline: none;
+      border-color: #000000;
+      box-shadow: 0 0 0 2px rgba(0,0,0,0.08);
+    }
+    .sourcing-tab.active {
+      background-color: #09090B !important;
+      color: #FFFFFF !important;
+      border-color: #09090B !important;
+    }
+
+    /* ==========================================
+       THEME 2: OPS & CRM (Emerald Night Dark)
+       ========================================== */
+    body.theme-ops {
+      background-color: #070B14;
+      color: #F8FAFC;
+    }
+    body.theme-ops .suite-card {
+      background-color: #0F172A;
+      border: 1px solid #1E293B;
+      box-shadow: 0 10px 30px -10px rgba(0,0,0,0.5);
+    }
+    body.theme-ops input,
+    body.theme-ops select,
+    body.theme-ops textarea {
+      background-color: #090E1A;
+      border: 1px solid #334155;
+      color: #F8FAFC;
+      border-radius: 0.5rem;
+      padding: 0.55rem 0.75rem;
+      width: 100%;
+      font-size: 0.9rem;
+      transition: all 0.2s;
+    }
+    body.theme-ops input:focus,
+    body.theme-ops select:focus,
+    body.theme-ops textarea:focus {
+      outline: none;
+      border-color: #10B981;
+      box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.2);
+    }
+    .ops-tab.active {
+      background: linear-gradient(135deg, #10B981 0%, #059669 100%) !important;
+      color: #000000 !important;
+      font-weight: 800 !important;
+      border-color: #10B981 !important;
+      box-shadow: 0 0 18px rgba(16, 185, 129, 0.3);
+    }
+
+    /* Star Rating */
+    .star-item {
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: #D4D4D8;
+      transition: transform 0.15s, color 0.15s;
+    }
+    .star-item.active {
+      color: #09090B;
+    }
+
+    /* Print Handling for Both Invoice & Shipping Label */
+    @media print {
+      body * { visibility: hidden; }
+      body.printing-invoice #invoice-a4-sheet,
+      body.printing-invoice #invoice-a4-sheet * {
+        visibility: visible;
+      }
+      body.printing-invoice #invoice-a4-sheet {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        box-shadow: none !important;
+        border: none !important;
+        background: #FFFFFF !important;
+        color: #000000 !important;
+      }
+      body.printing-labels #print-label-sheet,
+      body.printing-labels #print-label-sheet * {
+        visibility: visible;
+      }
+      body.printing-labels #print-label-sheet {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        background: #FFFFFF !important;
+        color: #000000 !important;
+      }
+    }
+  </style>
+</head>
+<body class="theme-sourcing min-h-screen flex flex-col">
+
+  <!-- =================================================================
+       MASTER ENTERPRISE DOCK (SWITCH BETWEEN SYSTEM 1 & SYSTEM 2)
+       ================================================================= -->
+  <header id="master-header" class="bg-white border-b border-zinc-200 sticky top-0 z-40 transition-colors duration-300">
+    <div class="max-w-7xl mx-auto px-4 py-3 flex flex-col lg:flex-row items-center justify-between gap-4">
+      
+      <!-- Brand Identity -->
+      <div class="flex items-center gap-4">
+        <div class="text-center select-none">
+          <div id="brand-main" class="doss-logo text-3xl font-semibold text-black transition-colors">DOSS</div>
+          <div id="brand-sub" class="doss-sub text-zinc-600 mt-0.5 transition-colors">UNIVERSE</div>
+        </div>
+        <span class="h-7 w-px bg-zinc-300 hidden sm:inline-block"></span>
+        <div>
+          <div class="flex items-center gap-2">
+            <span id="system-badge" class="font-en text-[11px] font-bold uppercase tracking-widest px-2.5 py-0.5 rounded bg-black text-white">
+              SUITE v3.0
+            </span>
+            <span id="active-mode-label" class="text-xs font-bold text-zinc-600">
+              نظام الاستيراد والتسعير (Alibaba Sourcing)
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- MASTER SYSTEM SWITCHER (THE BRIDGE) -->
+      <div class="bg-zinc-100 p-1.5 rounded-xl border border-zinc-300 flex items-center gap-1.5 w-full lg:w-auto justify-center" id="switcher-container">
+        <button onclick="switchMasterWorkspace('sourcing')" id="ws-btn-sourcing" class="flex-1 lg:flex-initial px-4 py-2 rounded-lg text-xs font-bold transition flex items-center justify-center gap-2 bg-black text-white shadow-sm">
+          <span class="font-en">01. WORK OS</span>
+          <span class="hidden sm:inline opacity-80">(علي بابا والحاسبات)</span>
+        </button>
+        <button onclick="switchMasterWorkspace('ops')" id="ws-btn-ops" class="flex-1 lg:flex-initial px-4 py-2 rounded-lg text-xs font-bold transition flex items-center justify-center gap-2 text-zinc-700 hover:bg-zinc-200">
+          <span class="font-en">02. OPS & CRM</span>
+          <span class="hidden sm:inline opacity-80">(التوصيل، الواتساب والمحلات)</span>
+        </button>
+      </div>
+
+      <!-- Global Live Telemetry Pill -->
+      <div id="telemetry-bar" class="hidden xl:flex items-center gap-4 text-xs bg-zinc-50 px-4 py-2 rounded-xl border border-zinc-200">
+        <div>
+          <span class="text-zinc-400">المنتج النشط:</span>
+          <strong id="glob-product" class="mr-1 font-en">Structured Tote Bag</strong>
+        </div>
+        <span class="text-zinc-300">|</span>
+        <div>
+          <span class="text-zinc-400">التكلفة:</span>
+          <strong id="glob-cost" class="mr-1 font-en">3.30 JOD</strong>
+        </div>
+        <span class="text-zinc-300">|</span>
+        <div>
+          <span class="text-zinc-400">كاش بذمة التوصيل:</span>
+          <strong id="glob-cod" class="mr-1 font-en text-emerald-600">12.00 JOD</strong>
+        </div>
+      </div>
+    </div>
+
+    <!-- SUB-NAVIGATION FOR SYSTEM 1: SOURCING SOP -->
+    <div id="subnav-sourcing" class="bg-zinc-50 border-t border-zinc-200">
+      <div class="max-w-7xl mx-auto px-4 py-2 flex items-center justify-between gap-2 overflow-x-auto">
+        <div class="flex items-center gap-1.5">
+          <button onclick="openSourcingTab('sop')" id="stab-sop" class="sourcing-tab active font-en text-xs font-semibold px-3.5 py-2 rounded-lg border border-zinc-300 bg-white whitespace-nowrap transition">
+            0. SOP Guide
+          </button>
+          <button onclick="openSourcingTab('quick')" id="stab-quick" class="sourcing-tab font-en text-xs font-semibold px-3.5 py-2 rounded-lg border border-zinc-300 bg-white whitespace-nowrap transition">
+            1. Quick Check ★
+          </button>
+          <button onclick="openSourcingTab('cost')" id="stab-cost" class="sourcing-tab font-en text-xs font-semibold px-3.5 py-2 rounded-lg border border-zinc-300 bg-white whitespace-nowrap transition">
+            2. Landed Cost
+          </button>
+          <button onclick="openSourcingTab('profit')" id="stab-profit" class="sourcing-tab font-en text-xs font-semibold px-3.5 py-2 rounded-lg border border-zinc-300 bg-white whitespace-nowrap transition">
+            3. Pricing & Profit
+          </button>
+          <button onclick="openSourcingTab('invoice')" id="stab-invoice" class="sourcing-tab font-en text-xs font-semibold px-3.5 py-2 rounded-lg border border-zinc-300 bg-white whitespace-nowrap transition">
+            4. Invoice PDF
+          </button>
+          <button onclick="openSourcingTab('excel')" id="stab-excel" class="sourcing-tab font-en text-xs font-semibold px-3.5 py-2 rounded-lg border border-zinc-300 bg-white whitespace-nowrap transition">
+            5. Excel Sheet (<span id="saved-count">0</span>)
+          </button>
+        </div>
+
+        <button onclick="bridgeProductToOps()" class="bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold px-3.5 py-1.5 rounded-lg whitespace-nowrap transition flex items-center gap-1.5">
+          <span>إرسال المنتج لنظام التوصيل والمحلات</span>
+          <span class="font-en">&larr;</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- SUB-NAVIGATION FOR SYSTEM 2: OPS & CRM -->
+    <div id="subnav-ops" class="hidden bg-[#060911] border-t border-slate-800">
+      <div class="max-w-7xl mx-auto px-4 py-2 flex items-center justify-between gap-2 overflow-x-auto">
+        <div class="flex items-center gap-2">
+          <button onclick="openOpsTab('cod')" id="otab-cod" class="ops-tab active font-en text-xs px-3.5 py-2 rounded-lg border border-slate-800 bg-slate-900 text-slate-300 whitespace-nowrap transition">
+            1. COD & Delivery 📦
+          </button>
+          <button onclick="openOpsTab('wa')" id="otab-wa" class="ops-tab font-en text-xs px-3.5 py-2 rounded-lg border border-slate-800 bg-slate-900 text-slate-300 whitespace-nowrap transition">
+            2. WhatsApp Engine 💬
+          </button>
+          <button onclick="openOpsTab('crm')" id="otab-crm" class="ops-tab font-en text-xs px-3.5 py-2 rounded-lg border border-slate-800 bg-slate-900 text-slate-300 whitespace-nowrap transition">
+            3. B2B Shops CRM 🏪
+          </button>
+          <button onclick="openOpsTab('spy')" id="otab-spy" class="ops-tab font-en text-xs px-3.5 py-2 rounded-lg border border-slate-800 bg-slate-900 text-slate-300 whitespace-nowrap transition">
+            4. Ad & Trend Spy 🔍
+          </button>
+          <button onclick="openOpsTab('qr')" id="otab-qr" class="ops-tab font-en text-xs px-3.5 py-2 rounded-lg border border-slate-800 bg-slate-900 text-slate-300 whitespace-nowrap transition">
+            5. QR & Packaging 🏷️
+          </button>
+        </div>
+
+        <div class="flex items-center gap-3 text-xs text-slate-400 whitespace-nowrap">
+          <span>نسبة التسليم: <strong id="ops-bar-rate" class="font-en text-indigo-400">100%</strong></span>
+          <span>|</span>
+          <span>ذمم المحلات: <strong id="ops-bar-debt" class="font-en text-amber-400">45.00 JOD</strong></span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- =================================================================
+       WORKSPACE 01: SOURCING & IMPORT ENGINE (LIGHT MONOCHROME)
+       ================================================================= -->
+  <main id="workspace-sourcing" class="max-w-7xl mx-auto w-full px-4 py-6 flex-1 space-y-6">
+
+    <!-- STEP 0: SOP GUIDE -->
+    <section id="ssec-sop" class="suite-card p-6 rounded-2xl">
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-zinc-200 pb-4">
+        <div>
+          <span class="font-en text-xs uppercase tracking-widest text-zinc-500 font-bold">Standard Operating Procedure</span>
+          <h1 class="text-2xl font-extrabold mt-1">خريطة العمل الموحدة للفريق (من علي بابا إلى تحصيل الكاش)</h1>
+          <p class="text-sm text-zinc-600 mt-1">نظامان مترابطان في شاشة واحدة: ابدأ بدراسة المنتج في النظام الأول، ثم أدر المبيعات والتوصيل والمحلات في النظام الثاني.</p>
+        </div>
+        <button onclick="openSourcingTab('quick')" class="bg-black text-white font-en text-xs font-bold px-5 py-3 rounded-xl hover:bg-zinc-800 transition whitespace-nowrap">
+          Start Step 1: Quick Check &larr;
+        </button>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-5 gap-4 mt-6">
+        <div onclick="openSourcingTab('quick')" class="cursor-pointer p-4 rounded-xl border border-zinc-200 hover:border-black transition bg-zinc-50">
+          <span class="font-en text-[11px] font-bold bg-black text-white px-2 py-0.5 rounded">STEP 1</span>
+          <h3 class="font-en font-bold text-base mt-2">1. Quick Check ★</h3>
+          <p class="text-xs text-zinc-600 mt-1 leading-relaxed">فحص سريع للمنتج وأنت تتصفح علي بابا مع تقييم النجوم وفحص أمان المورد.</p>
+        </div>
+        <div onclick="openSourcingTab('cost')" class="cursor-pointer p-4 rounded-xl border border-zinc-200 hover:border-black transition bg-zinc-50">
+          <span class="font-en text-[11px] font-bold bg-black text-white px-2 py-0.5 rounded">STEP 2</span>
+          <h3 class="font-en font-bold text-base mt-2">2. Landed Cost</h3>
+          <p class="text-xs text-zinc-600 mt-1 leading-relaxed">حساب التكلفة الصافية واصلة لعمّان شاملة الشحن، الجمرك، والوزن الحجمي.</p>
+        </div>
+        <div onclick="openSourcingTab('profit')" class="cursor-pointer p-4 rounded-xl border border-zinc-200 hover:border-black transition bg-zinc-50">
+          <span class="font-en text-[11px] font-bold bg-black text-white px-2 py-0.5 rounded">STEP 3</span>
+          <h3 class="font-en font-bold text-base mt-2">3. Pricing & Profit</h3>
+          <p class="text-xs text-zinc-600 mt-1 leading-relaxed">تسعير البيع أونلاين (بعد الإعلان والمرتجع) وتسعير الجملة للمحلات ونقطة التعادل.</p>
+        </div>
+        <div onclick="openSourcingTab('invoice')" class="cursor-pointer p-4 rounded-xl border border-zinc-200 hover:border-black transition bg-zinc-50">
+          <span class="font-en text-[11px] font-bold bg-black text-white px-2 py-0.5 rounded">STEP 4</span>
+          <h3 class="font-en font-bold text-base mt-2">4. Invoice PDF</h3>
+          <p class="text-xs text-zinc-600 mt-1 leading-relaxed">توليد وتنزيل عرض سعر أو فاتورة جملة رسمية للمحلات بحجم A4 PDF أو صورة.</p>
+        </div>
+        <div onclick="switchMasterWorkspace('ops')" class="cursor-pointer p-4 rounded-xl border-2 border-emerald-600 hover:bg-emerald-50 transition bg-emerald-50/40">
+          <span class="font-en text-[11px] font-bold bg-emerald-600 text-white px-2 py-0.5 rounded">SYSTEM 02</span>
+          <h3 class="font-en font-bold text-base mt-2 text-emerald-950">OPS & CRM 🚀</h3>
+          <p class="text-xs text-emerald-900 mt-1 leading-relaxed">الانتقال لنظام التوصيل، رسائل الواتساب التلقائية، خريطة المحلات، وبوليصة الشحن.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- STEP 1: QUICK CHECK -->
+    <section id="ssec-quick" class="hidden suite-card p-6 rounded-2xl">
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-2 border-b border-zinc-200 pb-4 mb-6">
+        <div>
+          <span class="font-en text-xs font-bold uppercase tracking-wider text-zinc-500">STEP 1 // ALIBABA FAST FILTER</span>
+          <h2 class="text-xl font-bold mt-0.5">الفحص السريع للمنتج وتقييم النجوم (Quick Check)</h2>
+        </div>
+        <span class="text-xs bg-zinc-100 border border-zinc-300 px-3 py-1 rounded-full font-semibold">يدعم الدينار (JOD) والدولار (USD) مباشرة</span>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <div class="lg:col-span-7 space-y-4">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-xs font-bold mb-1">اسم المنتج (Product Name)</label>
+              <input type="text" id="q-name" value="Structured Tote Bag" oninput="runQuickCheck()" />
+            </div>
+            <div>
+              <label class="block text-xs font-bold mb-1">اسم المورد (Supplier)</label>
+              <input type="text" id="q-supplier" value="Baoding Rain Bags Co., Ltd." oninput="runQuickCheck()" />
+            </div>
+          </div>
+
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 bg-zinc-50 p-4 rounded-xl border border-zinc-200">
+            <div>
+              <label class="block text-xs font-bold mb-1">العملة بعلي بابا</label>
+              <select id="q-currency" onchange="runQuickCheck()">
+                <option value="JOD" selected>دينار (JOD)</option>
+                <option value="USD">دولار (USD)</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-xs font-bold mb-1">سعر الحبة بالمصنع</label>
+              <input type="number" step="0.01" id="q-unit-price" value="2.04" oninput="runQuickCheck()" class="font-en" />
+            </div>
+            <div>
+              <label class="block text-xs font-bold mb-1">شحن تقريبي للحبة (JOD)</label>
+              <input type="number" step="0.1" id="q-est-ship" value="1.20" oninput="runQuickCheck()" class="font-en" />
+            </div>
+            <div>
+              <label class="block text-xs font-bold mb-1">الكمية (Qty)</label>
+              <input type="number" id="q-qty" value="50" oninput="runQuickCheck()" class="font-en" />
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-xs font-bold mb-1">سعر البيع المتوقع أونلاين (JOD)</label>
+              <input type="number" step="0.5" id="q-sell-online" value="12.00" oninput="runQuickCheck()" class="font-en" />
+            </div>
+            <div>
+              <label class="block text-xs font-bold mb-1">سعر البيع المتوقع جملة للمحلات (JOD)</label>
+              <input type="number" step="0.25" id="q-sell-wholesale" value="5.50" oninput="runQuickCheck()" class="font-en" />
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-1">
+            <div class="p-4 rounded-xl border border-zinc-200 bg-zinc-50">
+              <label class="block text-xs font-bold mb-2">تقييم المنتج بالنجوم (Star Rating)</label>
+              <div class="flex items-center gap-2" id="star-box">
+                <span onclick="setStars(1)" class="star-item active">★</span>
+                <span onclick="setStars(2)" class="star-item active">★</span>
+                <span onclick="setStars(3)" class="star-item active">★</span>
+                <span onclick="setStars(4)" class="star-item active">★</span>
+                <span onclick="setStars(5)" class="star-item">★</span>
+                <span id="star-label" class="font-en text-xs font-bold mr-2">4 / 5</span>
+              </div>
+            </div>
+
+            <div class="p-4 rounded-xl border border-zinc-200 bg-zinc-50 space-y-2">
+              <label class="block text-xs font-bold">فحص موثوقية المورد</label>
+              <label class="flex items-center gap-2 text-xs cursor-pointer">
+                <input type="checkbox" id="q-trade" checked onchange="runQuickCheck()" class="w-4 h-4 accent-black" />
+                <span>يدعم Trade Assurance</span>
+              </label>
+              <label class="flex items-center gap-2 text-xs cursor-pointer">
+                <input type="checkbox" id="q-rating" checked onchange="runQuickCheck()" class="w-4 h-4 accent-black" />
+                <span>تقييم المتجر 4.0/5 أو أعلى</span>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <!-- Verdict Box -->
+        <div class="lg:col-span-5 bg-zinc-950 text-white p-6 rounded-2xl flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between border-b border-zinc-800 pb-3">
+              <span class="font-en text-xs uppercase tracking-widest text-zinc-400">INSTANT VERDICT</span>
+              <span id="q-badge" class="px-3 py-1 rounded text-xs font-bold bg-emerald-400 text-black">مربح ممتاز (WINNER)</span>
+            </div>
+
+            <div class="grid grid-cols-2 gap-3 my-5">
+              <div class="bg-zinc-900 p-3.5 rounded-xl border border-zinc-800">
+                <div class="text-xs text-zinc-400">التكلفة التقريبية للحبة</div>
+                <div id="q-out-cost" class="font-en text-xl font-bold mt-1">3.24 JOD</div>
+              </div>
+              <div class="bg-zinc-900 p-3.5 rounded-xl border border-zinc-800">
+                <div class="text-xs text-zinc-400">رأس المال المطلوب</div>
+                <div id="q-out-cap" class="font-en text-xl font-bold mt-1">162.00 JOD</div>
+              </div>
+              <div class="bg-zinc-900 p-3.5 rounded-xl border border-zinc-800">
+                <div class="text-xs text-zinc-400">هامش الحبة أونلاين</div>
+                <div id="q-out-on" class="font-en text-xl font-bold text-emerald-400 mt-1">+8.76 JOD</div>
+              </div>
+              <div class="bg-zinc-900 p-3.5 rounded-xl border border-zinc-800">
+                <div class="text-xs text-zinc-400">ربح الحبة جملة</div>
+                <div id="q-out-ws" class="font-en text-xl font-bold text-amber-300 mt-1">+2.26 JOD</div>
+              </div>
+            </div>
+
+            <div id="q-advice" class="text-xs text-zinc-300 bg-zinc-900 p-3.5 rounded-xl border border-zinc-800 leading-relaxed">
+              المنتج يحقق هامش ربح قوي أونلاين وبالجملة. انتقل للخطوة 2 لحساب التكلفة الدقيقة.
+            </div>
+          </div>
+
+          <div class="flex flex-col sm:flex-row gap-2.5 mt-6 pt-4 border-t border-zinc-800">
+            <button onclick="saveToExcel()" class="flex-1 bg-white text-black font-bold text-xs py-3 rounded-xl hover:bg-zinc-200 transition">
+              + حفظ سريع في الإكسل
+            </button>
+            <button onclick="pushQuickToLanded()" class="flex-1 bg-zinc-800 text-white font-en font-bold text-xs py-3 rounded-xl hover:bg-zinc-700 transition">
+              Next: 2. Landed Cost &larr;
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- STEP 2: LANDED COST -->
+    <section id="ssec-cost" class="hidden suite-card p-6 rounded-2xl">
+      <div class="border-b border-zinc-200 pb-4 mb-6">
+        <span class="font-en text-xs font-bold uppercase tracking-wider text-zinc-500">STEP 2 // EXACT LANDED COST</span>
+        <h2 class="text-xl font-bold mt-0.5">حاسبة التكلفة الصافية واصلة لعمّان (Landed Cost)</h2>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <div class="lg:col-span-7 space-y-4">
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div>
+              <label class="block text-xs font-bold mb-1">سعر المصنع للحبة (JOD)</label>
+              <input type="number" step="0.01" id="c-unit" value="2.04" oninput="calcLanded()" class="font-en" />
+            </div>
+            <div>
+              <label class="block text-xs font-bold mb-1">الكمية الكلية (Qty)</label>
+              <input type="number" id="c-qty" value="50" oninput="calcLanded()" class="font-en" />
+            </div>
+            <div>
+              <label class="block text-xs font-bold mb-1">شحن داخلي بالصين للكل (JOD)</label>
+              <input type="number" step="0.5" id="c-china" value="5.00" oninput="calcLanded()" class="font-en" />
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div>
+              <label class="block text-xs font-bold mb-1">إجمالي الشحن الدولي والجمرك (JOD)</label>
+              <input type="number" step="1" id="c-intl" value="50.00" oninput="calcLanded()" class="font-en" />
+            </div>
+            <div>
+              <label class="block text-xs font-bold mb-1">تغليف وكيس لكل حبة (JOD)</label>
+              <input type="number" step="0.05" id="c-pack" value="0.10" oninput="calcLanded()" class="font-en" />
+            </div>
+            <div>
+              <label class="block text-xs font-bold mb-1">عمولة دفع علي بابا (%)</label>
+              <input type="number" step="0.1" id="c-fee" value="3.0" oninput="calcLanded()" class="font-en" />
+            </div>
+          </div>
+
+          <!-- Volumetric Helper -->
+          <div class="bg-zinc-50 p-4 rounded-xl border border-zinc-200">
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-xs font-bold">حاسبة الوزن الحجمي للكرتونة (Volumetric Check)</span>
+              <span id="v-kg-label" class="font-en text-xs font-bold">الوزن الحجمي: 8.0 kg</span>
+            </div>
+            <div class="grid grid-cols-4 gap-2">
+              <div>
+                <label class="block text-[11px] text-zinc-500">الطول (سم)</label>
+                <input type="number" id="v-l" value="50" oninput="calcVol()" class="font-en text-xs" />
+              </div>
+              <div>
+                <label class="block text-[11px] text-zinc-500">العرض (سم)</label>
+                <input type="number" id="v-w" value="40" oninput="calcVol()" class="font-en text-xs" />
+              </div>
+              <div>
+                <label class="block text-[11px] text-zinc-500">الارتفاع (سم)</label>
+                <input type="number" id="v-h" value="20" oninput="calcVol()" class="font-en text-xs" />
+              </div>
+              <div>
+                <label class="block text-[11px] text-zinc-500">سعر الكيلو (JOD)</label>
+                <input type="number" step="0.5" id="v-rate" value="6.0" oninput="calcVol()" class="font-en text-xs" />
+              </div>
+            </div>
+            <button onclick="applyVolToShip()" class="mt-2.5 text-xs font-bold underline text-black">
+              اعتماد تكلفة الشحن الحجمي (<span id="v-cost-out" class="font-en">48.00</span> JOD) في خانة الشحن الدولي &uarr;
+            </button>
+          </div>
+        </div>
+
+        <div class="lg:col-span-5 bg-zinc-950 text-white p-6 rounded-2xl flex flex-col justify-between">
+          <div>
+            <span class="font-en text-xs uppercase tracking-widest text-zinc-400">EXACT UNIT LANDED COST</span>
+            <div class="mt-2">
+              <div class="text-xs text-zinc-400">التكلفة الصافية للحبة الواحدة واصلة لعمّان</div>
+              <div id="c-out-unit" class="font-en text-4xl font-bold mt-1">3.30 JOD</div>
+            </div>
+
+            <div class="space-y-2 mt-6 text-xs border-t border-zinc-800 pt-4">
+              <div class="flex justify-between">
+                <span class="text-zinc-400">ثمن البضاعة من المصنع:</span>
+                <span id="c-out-goods" class="font-en font-semibold">102.00 JOD</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-zinc-400">إجمالي الشحن (داخلي + دولي) والجمرك:</span>
+                <span id="c-out-ship" class="font-en font-semibold">55.00 JOD</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-zinc-400">عمولة الدفع + التغليف المحلي:</span>
+                <span id="c-out-extra" class="font-en font-semibold">8.06 JOD</span>
+              </div>
+              <div class="flex justify-between text-sm font-bold border-t border-zinc-800 pt-2 mt-2">
+                <span>إجمالي رأس مال الشحنة الكلي:</span>
+                <span id="c-out-total" class="font-en text-emerald-400">165.06 JOD</span>
+              </div>
+            </div>
+          </div>
+
+          <button onclick="openSourcingTab('profit')" class="w-full mt-6 bg-white text-black font-en font-bold text-xs py-3 rounded-xl hover:bg-zinc-200 transition">
+            Next: 3. Pricing & Profit &larr;
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- STEP 3: PRICING & PROFIT -->
+    <section id="ssec-profit" class="hidden suite-card p-6 rounded-2xl">
+      <div class="border-b border-zinc-200 pb-4 mb-6">
+        <span class="font-en text-xs font-bold uppercase tracking-wider text-zinc-500">STEP 3 // PRICING & PROFIT SIMULATION</span>
+        <h2 class="text-xl font-bold mt-0.5">حاسبة التسعير وصافي الأرباح (أونلاين + جملة للمحلات)</h2>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <!-- Online Channel -->
+        <div class="p-5 rounded-xl border border-zinc-200 bg-zinc-50 space-y-4">
+          <div class="flex items-center justify-between border-b border-zinc-200 pb-2">
+            <h3 class="font-bold text-base">1. قناة البيع أونلاين (الموقع والسوشيال ميديا)</h3>
+            <span class="font-en text-xs bg-black text-white px-2.5 py-0.5 rounded">B2C Online</span>
+          </div>
+
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="block text-xs font-bold mb-1">سعر بيع الحبة أونلاين (JOD)</label>
+              <input type="number" step="0.5" id="p-online" value="12.00" oninput="calcProfit()" class="font-en" />
+            </div>
+            <div>
+              <label class="block text-xs font-bold mb-1">تكلفة الإعلان للبيعة (CPA JOD)</label>
+              <input type="number" step="0.25" id="p-cpa" value="2.50" oninput="calcProfit()" class="font-en" />
+            </div>
+            <div>
+              <label class="block text-xs font-bold mb-1">عبء المرتجع للحبة (توصيل ضائع)</label>
+              <input type="number" step="0.1" id="p-ret" value="0.35" oninput="calcProfit()" class="font-en" />
+            </div>
+            <div>
+              <label class="block text-xs font-bold mb-1">سعر عرض الحبتين (Bundle 2x)</label>
+              <input type="number" step="0.5" id="p-bundle2" value="20.00" oninput="calcProfit()" class="font-en" />
+            </div>
+          </div>
+
+          <div class="bg-white p-4 rounded-xl border border-zinc-200 space-y-2 text-xs">
+            <div class="flex justify-between">
+              <span class="text-zinc-500">صافي ربح الحبة أونلاين (بعد الإعلان والمرتجع):</span>
+              <strong id="p-out-on-net" class="font-en text-sm text-emerald-700">5.85 JOD</strong>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-zinc-500">صافي ربح عرض الحبتين (بإعلان واحد):</span>
+              <strong id="p-out-b2-net" class="font-en text-sm text-black">10.55 JOD</strong>
+            </div>
+            <div class="flex justify-between border-t border-zinc-100 pt-2">
+              <span class="text-zinc-500">نقطة استرداد رأس المال الكلي:</span>
+              <strong id="p-out-be" class="font-en text-sm text-black">بيع 14 حبة من أصل 50</strong>
+            </div>
+          </div>
+        </div>
+
+        <!-- Wholesale Channel -->
+        <div class="p-5 rounded-xl border border-zinc-200 bg-zinc-50 space-y-4">
+          <div class="flex items-center justify-between border-b border-zinc-200 pb-2">
+            <h3 class="font-bold text-base">2. قناة البيع جملة للمحلات (التوزيع الميداني)</h3>
+            <span class="font-en text-xs bg-zinc-800 text-white px-2.5 py-0.5 rounded">B2B Wholesale</span>
+          </div>
+
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="block text-xs font-bold mb-1">سعر الجملة للحبة (درزن 12 حبة)</label>
+              <input type="number" step="0.25" id="p-ws" value="5.50" oninput="calcProfit()" class="font-en" />
+            </div>
+            <div>
+              <label class="block text-xs font-bold mb-1">أقل سعر تصفية للكميات الكبيرة</label>
+              <input type="number" step="0.25" id="p-ws-min" value="4.50" oninput="calcProfit()" class="font-en" />
+            </div>
+          </div>
+
+          <div class="bg-white p-4 rounded-xl border border-zinc-200 space-y-2 text-xs">
+            <div class="flex justify-between">
+              <span class="text-zinc-500">صافي ربح الحبة بالجملة (بدون إعلان):</span>
+              <strong id="p-out-ws-net" class="font-en text-sm text-black">2.20 JOD</strong>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-zinc-500">صافي ربح الدرزن الواحد (12 حبة):</span>
+              <strong id="p-out-ws-doz" class="font-en text-sm text-emerald-700">26.40 JOD</strong>
+            </div>
+            <div class="flex justify-between border-t border-zinc-100 pt-2">
+              <span class="text-zinc-500">الخط الأحمر (التكلفة الصافية بدون خسارة):</span>
+              <strong id="p-out-red" class="font-en text-sm text-red-600">3.30 JOD</strong>
+            </div>
+          </div>
+
+          <div class="flex flex-col sm:flex-row gap-2.5 pt-2">
+            <button onclick="saveToExcel()" class="flex-1 bg-black text-white font-bold text-xs py-3 rounded-xl hover:bg-zinc-800 transition">
+              + حفظ في جدول الإكسل
+            </button>
+            <button onclick="goToInvoice()" class="flex-1 bg-white border border-black text-black font-en font-bold text-xs py-3 rounded-xl hover:bg-zinc-100 transition">
+              Next: 4. Invoice PDF &larr;
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- STEP 4: INVOICE PDF & PNG -->
+    <section id="ssec-invoice" class="hidden suite-card p-6 rounded-2xl">
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-zinc-200 pb-4 mb-6">
+        <div>
+          <span class="font-en text-xs font-bold uppercase tracking-wider text-zinc-500">STEP 4 // OFFICIAL B2B INVOICE & QUOTE</span>
+          <h2 class="text-xl font-bold mt-0.5">إصدار وتنزيل فاتورة / عرض سعر رسمي للمحلات (A4 PDF & PNG)</h2>
+        </div>
+
+        <div class="flex flex-wrap items-center gap-2">
+          <button onclick="downloadInvoicePDF()" class="bg-black text-white font-en text-xs font-bold px-4 py-2.5 rounded-xl hover:bg-zinc-800 transition">
+            ⬇ Download PDF (A4)
+          </button>
+          <button onclick="downloadInvoicePNG()" class="bg-zinc-800 text-white font-en text-xs font-bold px-4 py-2.5 rounded-xl hover:bg-zinc-700 transition">
+            🖼 Download PNG Image
+          </button>
+          <button onclick="printInvoiceA4()" class="bg-zinc-100 border border-zinc-300 text-black font-en text-xs font-bold px-4 py-2.5 rounded-xl hover:bg-zinc-200 transition">
+            🖨 Print A4
+          </button>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <div class="lg:col-span-4 space-y-3 bg-zinc-50 p-4 rounded-xl border border-zinc-200 h-fit">
+          <h3 class="font-bold text-sm border-b border-zinc-200 pb-2">بيانات الفاتورة / المحل</h3>
+          <div>
+            <label class="block text-xs font-bold mb-1">نوع المستند</label>
+            <select id="inv-type" onchange="renderInvoice()">
+              <option value="عرض سعر جملة (WHOLESALE QUOTE)">عرض سعر جملة للمحلات</option>
+              <option value="فاتورة مبيعات (COMMERCIAL INVOICE)">فاتورة مبيعات رسمية</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-bold mb-1">اسم المحل التجاري</label>
+            <input type="text" id="inv-client" value="معرض الأناقة للحقائب - عمّان" oninput="renderInvoice()" />
+          </div>
+          <div class="grid grid-cols-2 gap-2">
+            <div>
+              <label class="block text-xs font-bold mb-1">رقم المستند</label>
+              <input type="text" id="inv-num" value="DOSS-2026-001" oninput="renderInvoice()" class="font-en" />
+            </div>
+            <div>
+              <label class="block text-xs font-bold mb-1">الكمية (حبة)</label>
+              <input type="number" id="inv-qty" value="24" oninput="renderInvoice()" class="font-en" />
+            </div>
+          </div>
+          <div class="grid grid-cols-2 gap-2">
+            <div>
+              <label class="block text-xs font-bold mb-1">سعر الحبة جملة (JOD)</label>
+              <input type="number" step="0.25" id="inv-price" value="5.50" oninput="renderInvoice()" class="font-en" />
+            </div>
+            <div>
+              <label class="block text-xs font-bold mb-1">سعر بيع المستهلك المقترح</label>
+              <input type="number" step="0.5" id="inv-retail" value="12.00" oninput="renderInvoice()" class="font-en" />
+            </div>
+          </div>
+          <div>
+            <label class="block text-xs font-bold mb-1">ملاحظات وشروط الدفع</label>
+            <textarea id="inv-notes" rows="2" oninput="renderInvoice()">الدفع نقداً عند الاستلام. البضاعة مفحوصة ومكفولة من DOSS UNIVERSE.</textarea>
+          </div>
+        </div>
+
+        <div class="lg:col-span-8">
+          <div id="invoice-a4-sheet" class="bg-white p-8 sm:p-10 border border-zinc-300 rounded-xl shadow-sm text-black max-w-3xl mx-auto">
+            <div class="flex items-start justify-between border-b-2 border-black pb-6">
+              <div>
+                <div class="doss-logo text-4xl font-semibold text-black">DOSS</div>
+                <div class="doss-sub text-zinc-700 mt-1">UNIVERSE</div>
+                <div class="text-xs text-zinc-500 mt-2">عمّان، المملكة الأردنية الهاشمية | قسم التوريد ومبيعات الجملة</div>
+              </div>
+              <div class="text-left font-en">
+                <div id="inv-out-type" class="text-xs font-bold uppercase tracking-wider bg-black text-white px-3 py-1 inline-block">
+                  عرض سعر جملة (WHOLESALE QUOTE)
+                </div>
+                <div class="text-xs text-zinc-600 mt-2">No: <strong id="inv-out-num">DOSS-2026-001</strong></div>
+                <div class="text-xs text-zinc-600">Date: <strong id="inv-out-date">2026-10-29</strong></div>
+              </div>
+            </div>
+
+            <div class="my-6 flex justify-between items-center bg-zinc-50 p-4 rounded-lg border border-zinc-200 text-xs">
+              <div>
+                <span class="text-zinc-500">موجّه إلى السادة:</span>
+                <div id="inv-out-client" class="text-sm font-bold mt-0.5">معرض الأناقة للحقائب - عمّان</div>
+              </div>
+              <div class="text-left">
+                <span class="text-zinc-500">حالة المستند:</span>
+                <div class="font-bold mt-0.5">معتمد وجاهز للتوريد الفوري</div>
+              </div>
+            </div>
+
+            <table class="w-full text-right border-collapse text-xs my-6">
+              <thead>
+                <tr class="border-b-2 border-black bg-zinc-100">
+                  <th class="py-3 px-3">الصنف / المنتج</th>
+                  <th class="py-3 px-3 text-center">الكمية</th>
+                  <th class="py-3 px-3 text-center">سعر الحبة (جملة)</th>
+                  <th class="py-3 px-3 text-center">سعر البيع المقترح للمستهلك</th>
+                  <th class="py-3 px-3 text-left">الإجمالي (JOD)</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr class="border-b border-zinc-200">
+                  <td id="inv-out-prod" class="py-4 px-3 font-bold text-sm">Structured Tote Bag</td>
+                  <td id="inv-out-qty" class="py-4 px-3 text-center font-en font-semibold">24</td>
+                  <td id="inv-out-price" class="py-4 px-3 text-center font-en font-semibold">5.50 JOD</td>
+                  <td id="inv-out-retail" class="py-4 px-3 text-center font-en text-zinc-600">12.00 JOD</td>
+                  <td id="inv-out-total" class="py-4 px-3 text-left font-en font-bold text-sm">132.00 JOD</td>
+                </tr>
+              </tbody>
+            </table>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 items-center border-t-2 border-black pt-4 mt-6">
+              <div class="text-xs text-zinc-600">
+                <strong>ملاحظات:</strong>
+                <p id="inv-out-notes" class="mt-1">الدفع نقداً عند الاستلام. البضاعة مفحوصة ومكفولة من DOSS UNIVERSE.</p>
+                <p class="mt-2 bg-zinc-100 p-2 rounded border border-zinc-200">
+                  💡 <strong>إجمالي ربح المحل المتوقع عند البيع للمستهلك:</strong>
+                  <span id="inv-out-shop-profit" class="font-en font-bold text-black">156.00 JOD</span>
+                </p>
+              </div>
+              <div class="bg-black text-white p-4 rounded-lg text-left font-en">
+                <div class="text-xs text-zinc-400 uppercase">TOTAL AMOUNT DUE</div>
+                <div id="inv-out-grand" class="text-2xl font-bold mt-1">132.00 JOD</div>
+              </div>
+            </div>
+
+            <div class="mt-10 pt-4 border-t border-zinc-200 flex justify-between items-center text-[11px] text-zinc-500">
+              <div>توقيع وختم المستلم: ________________________</div>
+              <div class="font-en tracking-widest uppercase">DOSS UNIVERSE // OFFICIAL COMMERCIAL DOCUMENT</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- STEP 5: EXCEL SHEET -->
+    <section id="ssec-excel" class="hidden suite-card p-6 rounded-2xl">
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-zinc-200 pb-4 mb-6">
+        <div>
+          <span class="font-en text-xs font-bold uppercase tracking-wider text-zinc-500">STEP 5 // MASTER PRODUCT SHEET</span>
+          <h2 class="text-xl font-bold mt-0.5">جدول مقارنة المنتجات المحفوظة وتصدير الإكسل (Excel Sheet)</h2>
+        </div>
+
+        <div class="flex flex-wrap gap-2">
+          <button onclick="exportProductsExcel()" class="bg-black text-white font-en text-xs font-bold px-4 py-2.5 rounded-xl hover:bg-zinc-800 transition">
+            ⬇ Download Excel (.CSV)
+          </button>
+          <button onclick="clearSavedProducts()" class="bg-zinc-100 text-red-600 border border-zinc-300 text-xs font-bold px-3.5 py-2.5 rounded-xl hover:bg-red-50 transition">
+            مسح الجدول
+          </button>
+        </div>
+      </div>
+
+      <div class="overflow-x-auto">
+        <table class="w-full text-right border-collapse text-xs">
+          <thead>
+            <tr class="bg-zinc-100 border-b-2 border-black">
+              <th class="py-3 px-3">المنتج</th>
+              <th class="py-3 px-3">المورد</th>
+              <th class="py-3 px-3 text-center">التقييم ★</th>
+              <th class="py-3 px-3 text-center">الكمية</th>
+              <th class="py-3 px-3 text-center">التكلفة الصافية</th>
+              <th class="py-3 px-3 text-center">سعر الأونلاين</th>
+              <th class="py-3 px-3 text-center">ربح الأونلاين</th>
+              <th class="py-3 px-3 text-center">سعر الجملة</th>
+              <th class="py-3 px-3 text-center">ربح الجملة</th>
+              <th class="py-3 px-3 text-center">إجراءات</th>
+            </tr>
+          </thead>
+          <tbody id="excel-tbody"></tbody>
+        </table>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- =================================================================
+       WORKSPACE 02: JORDAN OPS & CRM SUITE (DARK EMERALD TECH)
+       ================================================================= -->
+  <main id="workspace-ops" class="hidden max-w-7xl mx-auto w-full px-4 py-6 flex-1 space-y-6">
+
+    <!-- MODULE 1: COD & DELIVERY TRACKER -->
+    <section id="osec-cod" class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+      <div class="lg:col-span-4 suite-card rounded-2xl p-5 space-y-4 h-fit">
+        <div class="border-b border-slate-800 pb-3">
+          <span class="font-en text-[11px] text-emerald-400 font-bold uppercase tracking-wider">NEW SHIPMENT</span>
+          <h2 class="text-lg font-bold mt-0.5">تسجيل طرد جديد مع شركة التوصيل</h2>
+        </div>
+
+        <div class="space-y-3">
+          <div>
+            <label class="block text-xs text-slate-400 mb-1">اسم الزبون</label>
+            <input type="text" id="cod-name" placeholder="مثال: محمد العبدالله" />
+          </div>
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="block text-xs text-slate-400 mb-1">رقم الهاتف</label>
+              <input type="text" id="cod-phone" placeholder="079xxxxxxx" class="font-en" />
+            </div>
+            <div>
+              <label class="block text-xs text-slate-400 mb-1">المحافظة</label>
+              <select id="cod-city" onchange="autoSetCodFee()">
+                <option value="عمّان" data-fee="2">عمّان (توصيل 2 د)</option>
+                <option value="الزرقاء" data-fee="2.5">الزرقاء (2.5 د)</option>
+                <option value="إربد" data-fee="3">إربد (3 د)</option>
+                <option value="السلط / مأدبا" data-fee="2.5">السلط / مأدبا (2.5 د)</option>
+                <option value="باقي المحافظات" data-fee="3">باقي المحافظات (3 د)</option>
+              </select>
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-xs text-slate-400 mb-1">المنتج والكمية</label>
+            <input type="text" id="cod-prod" value="Structured Tote Bag (x1)" />
+          </div>
+
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="block text-xs text-slate-400 mb-1">التحصيل ش.التوصيل (JOD)</label>
+              <input type="number" step="0.5" id="cod-total" value="14.00" class="font-en" />
+            </div>
+            <div>
+              <label class="block text-xs text-slate-400 mb-1">أجرة شركة التوصيل (JOD)</label>
+              <input type="number" step="0.5" id="cod-fee" value="2.00" class="font-en" />
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-xs text-slate-400 mb-1">حالة الطرد</label>
+            <select id="cod-status">
+              <option value="pending">⏳ بانتظار تأكيد واتساب</option>
+              <option value="out">🚚 خرج مع المندوب</option>
+              <option value="delivered">✅ تم التسليم (بذمة التوصيل)</option>
+              <option value="settled">💰 تم قبض الكاش بالصندوق</option>
+              <option value="returned">❌ مرتجع (لم يستلم)</option>
+            </select>
+          </div>
+
+          <button onclick="addCodOrder()" class="w-full bg-emerald-500 hover:bg-emerald-400 text-black font-bold text-sm py-3 rounded-xl transition">
+            + إضافة الطرد لقائمة التتبع
+          </button>
+        </div>
+      </div>
+
+      <div class="lg:col-span-8 suite-card rounded-2xl p-5">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-800 pb-4 mb-4">
+          <div>
+            <span class="font-en text-[11px] text-indigo-400 font-bold uppercase tracking-wider">COD RECONCILIATION</span>
+            <h2 class="text-lg font-bold mt-0.5">دفتر تحصيل شركات التوصيل وحالة الطرود</h2>
+          </div>
+          <div class="flex flex-wrap gap-2">
+            <button onclick="settleAllDelivered()" class="bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 hover:bg-emerald-500 hover:text-black text-xs font-bold px-3.5 py-2 rounded-lg transition">
+              💰 تصفية واستلام كل الكاش المعلّق
+            </button>
+            <button onclick="exportCodCSV()" class="bg-slate-800 hover:bg-slate-700 text-slate-200 font-en text-xs font-semibold px-3.5 py-2 rounded-lg transition">
+              ⬇ Export CSV
+            </button>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-5">
+          <div class="bg-slate-950/90 border border-slate-800 p-3 rounded-xl">
+            <div class="text-[11px] text-slate-400">طرود قيد التوصيل</div>
+            <div id="sum-out" class="font-en text-lg font-bold text-amber-400 mt-0.5">0</div>
+          </div>
+          <div class="bg-slate-950/90 border border-slate-800 p-3 rounded-xl">
+            <div class="text-[11px] text-slate-400">كاش بذمة التوصيل</div>
+            <div id="sum-due" class="font-en text-lg font-bold text-emerald-400 mt-0.5">0.00 JOD</div>
+          </div>
+          <div class="bg-slate-950/90 border border-slate-800 p-3 rounded-xl">
+            <div class="text-[11px] text-slate-400">كاش مقبوض بالصندوق</div>
+            <div id="sum-settled" class="font-en text-lg font-bold text-white mt-0.5">0.00 JOD</div>
+          </div>
+          <div class="bg-slate-950/90 border border-slate-800 p-3 rounded-xl">
+            <div class="text-[11px] text-slate-400">عدد المرتجعات</div>
+            <div id="sum-ret" class="font-en text-lg font-bold text-rose-400 mt-0.5">0</div>
+          </div>
+        </div>
+
+        <div class="overflow-x-auto">
+          <table class="w-full text-right text-xs border-collapse">
+            <thead>
+              <tr class="border-b border-slate-800 text-slate-400 bg-slate-950/60">
+                <th class="py-3 px-2">الزبون والمنطقة</th>
+                <th class="py-3 px-2">المنتج</th>
+                <th class="py-3 px-2 text-center">التحصيل</th>
+                <th class="py-3 px-2 text-center">الصافي لنا</th>
+                <th class="py-3 px-2 text-center">الحالة</th>
+                <th class="py-3 px-2 text-center">إجراءات سريعة</th>
+              </tr>
+            </thead>
+            <tbody id="cod-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- MODULE 2: WHATSAPP AUTOMATION ENGINE -->
+    <section id="osec-wa" class="hidden suite-card rounded-2xl p-6">
+      <div class="border-b border-slate-800 pb-4 mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+        <div>
+          <span class="font-en text-[11px] text-emerald-400 font-bold uppercase tracking-wider">WHATSAPP AUTOMATION</span>
+          <h2 class="text-xl font-bold mt-0.5">محرك رسائل الواتساب التلقائي بضغطة زر</h2>
+        </div>
+        <span class="text-xs text-slate-400">يحول الرقم الأردني تلقائياً إلى (+962) ويفتح المحادثة مباشرة</span>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <div class="lg:col-span-5 space-y-4">
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="block text-xs text-slate-400 mb-1">اسم الزبون أو المحل</label>
+              <input type="text" id="wa-name" value="سارة أحمد" oninput="buildWaMsg()" />
+            </div>
+            <div>
+              <label class="block text-xs text-slate-400 mb-1">رقم الواتساب</label>
+              <input type="text" id="wa-phone" value="0791234567" oninput="buildWaMsg()" class="font-en" />
+            </div>
+          </div>
+
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="block text-xs text-slate-400 mb-1">اسم المنتج</label>
+              <input type="text" id="wa-prod" value="Structured Tote Bag" oninput="buildWaMsg()" />
+            </div>
+            <div>
+              <label class="block text-xs text-slate-400 mb-1">المبلغ ش.التوصيل (JOD)</label>
+              <input type="number" id="wa-amount" value="14.00" oninput="buildWaMsg()" class="font-en" />
+            </div>
+          </div>
+
+          <div class="space-y-2 pt-1">
+            <label class="block text-xs text-slate-400">اختر القالب الجاهز:</label>
+            <button onclick="setWaTpl('confirm')" id="wtpl-confirm" class="w-full text-right p-3 rounded-xl border border-emerald-500 bg-emerald-500/10 text-xs font-bold flex justify-between">
+              <span>1. تأكيد الطلب وأخذ اللوكيشن (يمنع المرتجع)</span>
+              <span class="font-en text-[10px] bg-emerald-500 text-black px-2 py-0.5 rounded">CONFIRM</span>
+            </button>
+            <button onclick="setWaTpl('out')" id="wtpl-out" class="w-full text-right p-3 rounded-xl border border-slate-800 bg-slate-950 text-xs font-bold flex justify-between">
+              <span>2. إشعار خروج الطرد مع المندوب اليوم</span>
+              <span class="font-en text-[10px] bg-slate-800 text-slate-300 px-2 py-0.5 rounded">DELIVERY</span>
+            </button>
+            <button onclick="setWaTpl('rescue')" id="wtpl-rescue" class="w-full text-right p-3 rounded-xl border border-slate-800 bg-slate-950 text-xs font-bold flex justify-between">
+              <span>3. إنقاذ طرد (المندوب رن ولم يرد الزبون)</span>
+              <span class="font-en text-[10px] bg-amber-500/20 text-amber-300 px-2 py-0.5 rounded">RESCUE</span>
+            </button>
+            <button onclick="setWaTpl('vip')" id="wtpl-vip" class="w-full text-right p-3 rounded-xl border border-slate-800 bg-slate-950 text-xs font-bold flex justify-between">
+              <span>4. خصم VIP 15% لزبون سابق (بيع بدون إعلانات)</span>
+              <span class="font-en text-[10px] bg-indigo-500/20 text-indigo-300 px-2 py-0.5 rounded">VIP</span>
+            </button>
+            <button onclick="setWaTpl('b2b')" id="wtpl-b2b" class="w-full text-right p-3 rounded-xl border border-slate-800 bg-slate-950 text-xs font-bold flex justify-between">
+              <span>5. رسالة عرض جملة للمحلات التجارية (زيد)</span>
+              <span class="font-en text-[10px] bg-purple-500/20 text-purple-300 px-2 py-0.5 rounded">B2B SHOP</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="lg:col-span-7 bg-slate-950 border border-slate-800 rounded-2xl p-5 flex flex-col justify-between">
+          <div>
+            <div class="flex justify-between items-center border-b border-slate-800 pb-3 mb-4">
+              <span class="text-xs font-bold text-emerald-400">معاينة الرسالة (قابلة للتعديل)</span>
+              <span id="wa-intl-preview" class="font-en text-xs text-slate-400">+962791234567</span>
+            </div>
+            <textarea id="wa-box" rows="9" class="text-sm leading-relaxed bg-slate-900 border-slate-700 p-4 rounded-xl"></textarea>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-5">
+            <button onclick="sendWhatsAppNow()" class="bg-emerald-500 hover:bg-emerald-400 text-black font-bold text-sm py-3.5 rounded-xl transition">
+              💬 إرسال مباشر عبر WhatsApp
+            </button>
+            <button onclick="copyWaMsg()" class="bg-slate-800 hover:bg-slate-700 text-white font-bold text-sm py-3.5 rounded-xl transition">
+              📋 نسخ الرسالة
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- MODULE 3: B2B SHOPS CRM -->
+    <section id="osec-crm" class="hidden grid grid-cols-1 lg:grid-cols-12 gap-6">
+      <div class="lg:col-span-4 suite-card rounded-2xl p-5 space-y-4 h-fit">
+        <div class="border-b border-slate-800 pb-3">
+          <span class="font-en text-[11px] text-emerald-400 font-bold uppercase tracking-wider">B2B WHOLESALE RADAR</span>
+          <h2 class="text-lg font-bold mt-0.5">إضافة محل تجاري لخريطة التوزيع</h2>
+        </div>
+
+        <div class="space-y-3">
+          <div>
+            <label class="block text-xs text-slate-400 mb-1">اسم المحل التجاري</label>
+            <input type="text" id="shop-name" placeholder="مثال: بوتيك لافندر للحقائب" />
+          </div>
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="block text-xs text-slate-400 mb-1">اسم المسؤول</label>
+              <input type="text" id="shop-contact" placeholder="أبو طارق" />
+            </div>
+            <div>
+              <label class="block text-xs text-slate-400 mb-1">رقم الموبايل</label>
+              <input type="text" id="shop-phone" placeholder="079xxxxxxx" class="font-en" />
+            </div>
+          </div>
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="block text-xs text-slate-400 mb-1">المنطقة / السوق</label>
+              <input type="text" id="shop-area" placeholder="عمّان - الصويفية" />
+            </div>
+            <div>
+              <label class="block text-xs text-slate-400 mb-1">التصنيف</label>
+              <select id="shop-status">
+                <option value="active">🟢 عميل يشتري جملة</option>
+                <option value="warm">🟡 مهتم / عينة</option>
+                <option value="cold">🔴 غير مهتم</option>
+              </select>
+            </div>
+          </div>
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="block text-xs text-slate-400 mb-1">ذمة مالية لنا (JOD)</label>
+              <input type="number" step="1" id="shop-debt" value="0" class="font-en" />
+            </div>
+            <div>
+              <label class="block text-xs text-slate-400 mb-1">ملاحظات المتابعة</label>
+              <input type="text" id="shop-note" placeholder="يحتاج درزن أول الشهر" />
+            </div>
+          </div>
+
+          <button onclick="addShop()" class="w-full bg-indigo-500 hover:bg-indigo-400 text-white font-bold text-sm py-3 rounded-xl transition">
+            + حفظ المحل في الرادار
+          </button>
+        </div>
+      </div>
+
+      <div class="lg:col-span-8 suite-card rounded-2xl p-5">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-800 pb-4 mb-4">
+          <div>
+            <span class="font-en text-[11px] text-indigo-400 font-bold uppercase tracking-wider">WHOLESALE NETWORK</span>
+            <h2 class="text-lg font-bold mt-0.5">قاعدة بيانات المحلات التجارية والذمم</h2>
+          </div>
+          <select id="crm-filter" onchange="renderShops()" class="text-xs w-48">
+            <option value="all">عرض كل المحلات</option>
+            <option value="active">🟢 عملاء الجملة فقط</option>
+            <option value="warm">🟡 المهتمين (متابعة)</option>
+            <option value="debt">💰 محلات عليها ذمم</option>
+          </select>
+        </div>
+
+        <div class="overflow-x-auto">
+          <table class="w-full text-right text-xs border-collapse">
+            <thead>
+              <tr class="border-b border-slate-800 text-slate-400 bg-slate-950/60">
+                <th class="py-3 px-2">المحل والمنطقة</th>
+                <th class="py-3 px-2">المسؤول</th>
+                <th class="py-3 px-2 text-center">التصنيف</th>
+                <th class="py-3 px-2 text-center">الذمة لنا</th>
+                <th class="py-3 px-2">ملاحظات</th>
+                <th class="py-3 px-2 text-center">إجراءات</th>
+              </tr>
+            </thead>
+            <tbody id="crm-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- MODULE 4: AD & COMPETITOR SPY -->
+    <section id="osec-spy" class="hidden grid grid-cols-1 lg:grid-cols-12 gap-6">
+      <div class="lg:col-span-7 suite-card rounded-2xl p-6 space-y-5">
+        <div class="border-b border-slate-800 pb-3">
+          <span class="font-en text-[11px] text-emerald-400 font-bold uppercase tracking-wider">JORDAN MARKET INTELLIGENCE</span>
+          <h2 class="text-xl font-bold mt-0.5">رادار كشف إعلانات المنافسين بالأردن وترندات المنتجات</h2>
+        </div>
+
+        <div>
+          <label class="block text-xs text-slate-400 mb-1">ابحث باسم المنتج (مثال: Tote Bag، شنطة، سماعة، عطر)</label>
+          <input type="text" id="spy-kw" value="Tote Bag" class="font-bold text-base" />
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <button onclick="openSpy('meta')" class="p-4 rounded-xl bg-slate-950 border border-slate-800 hover:border-emerald-500 text-right transition">
+            <div class="font-en text-xs font-bold text-emerald-400">Meta Ad Library (Jordan) &nearr;</div>
+            <div class="font-bold text-sm mt-1">كشف إعلانات فيسبوك وإنستغرام بالأردن</div>
+            <p class="text-[11px] text-slate-400 mt-1">شاهد المتاجر الأردنية التي تبيع هذا المنتج حالياً.</p>
+          </button>
+          <button onclick="openSpy('tiktok')" class="p-4 rounded-xl bg-slate-950 border border-slate-800 hover:border-indigo-500 text-right transition">
+            <div class="font-en text-xs font-bold text-indigo-400">TikTok Creative Center &nearr;</div>
+            <div class="font-bold text-sm mt-1">الفيديوهات الإعلانية الضاربة على تيك توك</div>
+            <p class="text-[11px] text-slate-400 mt-1">شاهد أقوى الهوكات لتصوير فيديوهات مماثلة.</p>
+          </button>
+          <button onclick="openSpy('alibaba')" class="p-4 rounded-xl bg-slate-950 border border-slate-800 hover:border-amber-500 text-right transition">
+            <div class="font-en text-xs font-bold text-amber-400">Alibaba Verified Suppliers &nearr;</div>
+            <div class="font-bold text-sm mt-1">المصانع المعتمدة في علي بابا</div>
+            <p class="text-[11px] text-slate-400 mt-1">بحث مباشر مع تفعيل Trade Assurance.</p>
+          </button>
+          <button onclick="openSpy('aliexpress')" class="p-4 rounded-xl bg-slate-950 border border-slate-800 hover:border-rose-500 text-right transition">
+            <div class="font-en text-xs font-bold text-rose-400">AliExpress Top Orders &nearr;</div>
+            <div class="font-bold text-sm mt-1">الأعلى مبيعاً وتقييماً عالمياً</div>
+            <p class="text-[11px] text-slate-400 mt-1">لفحص تقييمات وصور المشترين الحقيقية.</p>
+          </button>
+        </div>
+      </div>
+
+      <div class="lg:col-span-5 suite-card rounded-2xl p-6 flex flex-col justify-between">
+        <div class="space-y-4">
+          <div class="border-b border-slate-800 pb-3">
+            <span class="font-en text-[11px] text-indigo-400 font-bold uppercase tracking-wider">DAILY ROAS CHECK</span>
+            <h2 class="text-lg font-bold mt-0.5">حاسبة ربحية الإعلان اليومي</h2>
+          </div>
+
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="block text-xs text-slate-400 mb-1">صرف الإعلان اليوم (JOD)</label>
+              <input type="number" step="1" id="ad-spend" value="15.00" oninput="calcRoas()" class="font-en" />
+            </div>
+            <div>
+              <label class="block text-xs text-slate-400 mb-1">عدد الطلبات</label>
+              <input type="number" id="ad-orders" value="7" oninput="calcRoas()" class="font-en" />
+            </div>
+            <div>
+              <label class="block text-xs text-slate-400 mb-1">سعر بيع الحبة (JOD)</label>
+              <input type="number" step="0.5" id="ad-price" value="12.00" oninput="calcRoas()" class="font-en" />
+            </div>
+            <div>
+              <label class="block text-xs text-slate-400 mb-1">تكلفة الحبة علينا (JOD)</label>
+              <input type="number" step="0.1" id="ad-cost" value="3.30" oninput="calcRoas()" class="font-en" />
+            </div>
+          </div>
+
+          <div class="bg-slate-950 border border-slate-800 rounded-xl p-4 space-y-2 text-xs">
+            <div class="flex justify-between">
+              <span class="text-slate-400">تكلفة البيعة الواحدة (CPA):</span>
+              <strong id="ad-out-cpa" class="font-en text-white">2.14 JOD</strong>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-slate-400">العائد على الإعلان (ROAS):</span>
+              <strong id="ad-out-roas" class="font-en text-indigo-400">5.60x</strong>
+            </div>
+            <div class="flex justify-between border-t border-slate-800 pt-2">
+              <span class="font-bold">صافي ربح اليوم (بعد الإعلان والبضاعة):</span>
+              <strong id="ad-out-net" class="font-en text-base text-emerald-400">+45.90 JOD</strong>
+            </div>
+          </div>
+        </div>
+
+        <div id="ad-verdict" class="mt-4 p-3.5 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 text-xs font-bold">
+          إعلان رابح وممتاز! استمر بالحملة.
+        </div>
+      </div>
+    </section>
+
+    <!-- MODULE 5: QR & PACKAGING STUDIO -->
+    <section id="osec-qr" class="hidden suite-card rounded-2xl p-6">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-800 pb-4 mb-6">
+        <div>
+          <span class="font-en text-[11px] text-emerald-400 font-bold uppercase tracking-wider">PACKAGING & QR RETENTION</span>
+          <h2 class="text-xl font-bold mt-0.5">طباعة بوليصة الشحن + كرت خصم الـ QR الذكي</h2>
+        </div>
+        <button onclick="printLabels()" class="bg-emerald-500 hover:bg-emerald-400 text-black font-bold text-xs px-5 py-3 rounded-xl transition">
+          🖨 طباعة البوليصة وكرت الـ QR
+        </button>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <div class="lg:col-span-5 space-y-3">
+          <div>
+            <label class="block text-xs text-slate-400 mb-1">رقم واتساب المتجر (لكود الـ QR)</label>
+            <input type="text" id="qr-phone" value="0790000000" oninput="renderQrStudio()" class="font-en" />
+          </div>
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="block text-xs text-slate-400 mb-1">كود الخصم</label>
+              <input type="text" id="qr-code" value="DOSS15" oninput="renderQrStudio()" class="font-en" />
+            </div>
+            <div>
+              <label class="block text-xs text-slate-400 mb-1">نسبة الخصم</label>
+              <input type="text" id="qr-disc" value="15%" oninput="renderQrStudio()" class="font-en" />
+            </div>
+          </div>
+
+          <div class="pt-3 border-t border-slate-800 space-y-3">
+            <div class="grid grid-cols-2 gap-3">
+              <div>
+                <label class="block text-xs text-slate-400 mb-1">اسم المستلم</label>
+                <input type="text" id="lbl-name" value="سارة أحمد" oninput="renderQrStudio()" />
+              </div>
+              <div>
+                <label class="block text-xs text-slate-400 mb-1">هاتف المستلم</label>
+                <input type="text" id="lbl-phone" value="0791234567" oninput="renderQrStudio()" class="font-en" />
+              </div>
+            </div>
+            <div class="grid grid-cols-2 gap-3">
+              <div>
+                <label class="block text-xs text-slate-400 mb-1">المنطقة والعنوان</label>
+                <input type="text" id="lbl-city" value="عمّان - دابوق" oninput="renderQrStudio()" />
+              </div>
+              <div>
+                <label class="block text-xs text-slate-400 mb-1">المبلغ المطلوب (COD)</label>
+                <input type="text" id="lbl-cod" value="14.00 JOD" oninput="renderQrStudio()" class="font-en" />
+              </div>
+            </div>
+            <div>
+              <label class="block text-xs text-slate-400 mb-1">محتوى الطرد</label>
+              <input type="text" id="lbl-item" value="Structured Tote Bag - White (x1)" oninput="renderQrStudio()" />
+            </div>
+          </div>
+        </div>
+
+        <div class="lg:col-span-7">
+          <div id="print-label-sheet" class="grid grid-cols-1 md:grid-cols-2 gap-4 bg-white text-black p-6 rounded-2xl border-2 border-slate-300">
+            <div class="border-2 border-black p-4 rounded-xl flex flex-col justify-between">
+              <div>
+                <div class="flex justify-between items-center border-b-2 border-black pb-2">
+                  <div>
+                    <div class="doss-logo text-2xl font-bold">DOSS</div>
+                    <div class="doss-sub text-zinc-700">UNIVERSE</div>
+                  </div>
+                  <span class="bg-black text-white font-en text-[10px] font-bold px-2 py-0.5">COD PARCEL</span>
+                </div>
+                <div class="my-3 space-y-1.5 text-xs">
+                  <div><span class="text-zinc-500">المستلم:</span> <strong id="lbl-out-name">سارة أحمد</strong></div>
+                  <div><span class="text-zinc-500">الهاتف:</span> <strong id="lbl-out-phone" class="font-en">0791234567</strong></div>
+                  <div><span class="text-zinc-500">العنوان:</span> <strong id="lbl-out-city">عمّان - دابوق</strong></div>
+                  <div class="pt-1 border-t border-zinc-200"><span class="text-zinc-500">المحتوى:</span> <span id="lbl-out-item" class="font-semibold">Structured Tote Bag - White (x1)</span></div>
+                </div>
+              </div>
+              <div class="bg-black text-white p-3 rounded-lg flex justify-between items-center">
+                <span class="text-xs font-bold">المطلوب تحصيله:</span>
+                <span id="lbl-out-cod" class="font-en text-lg font-bold">14.00 JOD</span>
+              </div>
+            </div>
+
+            <div class="border-2 border-black p-4 rounded-xl flex flex-col items-center justify-between text-center bg-zinc-50">
+              <div class="w-full border-b border-zinc-300 pb-2">
+                <div class="doss-logo text-2xl font-bold">DOSS</div>
+                <div class="doss-sub text-zinc-600">UNIVERSE</div>
+              </div>
+              <div class="my-2">
+                <div class="text-xs font-bold">شكراً لاختيارك DOSS UNIVERSE 🖤</div>
+                <p class="text-[11px] text-zinc-600 mt-1">امسح الكود بكاميرا هاتفك للحصول على خصم <strong id="qr-out-disc">15%</strong> على طلبك القادم!</p>
+              </div>
+              <img id="qr-img" src="" alt="QR" class="w-28 h-28 border border-black p-1 bg-white rounded" />
+              <div class="mt-2 w-full bg-white border border-black py-1 px-2 rounded text-[11px] font-en font-bold">
+                VIP CODE: <span id="qr-out-code">DOSS15</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <script>
+    // =================================================================
+    // GLOBAL STATE & DUAL-WORKSPACE CONTROLLER
+    // =================================================================
+    let currentStars = 4;
+    let activeWaTpl = 'confirm';
+    let savedProducts = JSON.parse(localStorage.getItem('doss_suite_products') || '[]');
+    let codOrders = JSON.parse(localStorage.getItem('doss_suite_cod') || '[]');
+    let b2bShops = JSON.parse(localStorage.getItem('doss_suite_shops') || '[]');
+
+    function switchMasterWorkspace(mode) {
+      const body = document.body;
+      const header = document.getElementById('master-header');
+      const brandMain = document.getElementById('brand-main');
+      const brandSub = document.getElementById('brand-sub');
+      const badge = document.getElementById('system-badge');
+      const modeLabel = document.getElementById('active-mode-label');
+      const swContainer = document.getElementById('switcher-container');
+      const btnSourcing = document.getElementById('ws-btn-sourcing');
+      const btnOps = document.getElementById('ws-btn-ops');
+      const telemetry = document.getElementById('telemetry-bar');
+
+      if (mode === 'sourcing') {
+        body.className = 'theme-sourcing min-h-screen flex flex-col';
+        header.className = 'bg-white border-b border-zinc-200 sticky top-0 z-40 transition-colors duration-300';
+        brandMain.className = 'doss-logo text-3xl font-semibold text-black';
+        brandSub.className = 'doss-sub text-zinc-600 mt-0.5';
+        badge.className = 'font-en text-[11px] font-bold uppercase tracking-widest px-2.5 py-0.5 rounded bg-black text-white';
+        modeLabel.className = 'text-xs font-bold text-zinc-600';
+        modeLabel.innerText = 'نظام الاستيراد والتسعير (Alibaba Sourcing)';
+        swContainer.className = 'bg-zinc-100 p-1.5 rounded-xl border border-zinc-300 flex items-center gap-1.5 w-full lg:w-auto justify-center';
+        btnSourcing.className = 'flex-1 lg:flex-initial px-4 py-2 rounded-lg text-xs font-bold transition flex items-center justify-center gap-2 bg-black text-white shadow-sm';
+        btnOps.className = 'flex-1 lg:flex-initial px-4 py-2 rounded-lg text-xs font-bold transition flex items-center justify-center gap-2 text-zinc-700 hover:bg-zinc-200';
+        telemetry.className = 'hidden xl:flex items-center gap-4 text-xs bg-zinc-50 px-4 py-2 rounded-xl border border-zinc-200 text-zinc-800';
+
+        document.getElementById('subnav-sourcing').classList.remove('hidden');
+        document.getElementById('subnav-ops').classList.add('hidden');
+        document.getElementById('workspace-sourcing').classList.remove('hidden');
+        document.getElementById('workspace-ops').classList.add('hidden');
+      } else {
+        body.className = 'theme-ops min-h-screen flex flex-col';
+        header.className = 'bg-[#0B1120] border-b border-slate-800 sticky top-0 z-40 transition-colors duration-300';
+        brandMain.className = 'doss-logo text-3xl font-semibold text-white';
+        brandSub.className = 'doss-sub text-emerald-400 mt-0.5';
+        badge.className = 'font-en text-[11px] font-bold uppercase tracking-widest px-2.5 py-0.5 rounded bg-emerald-500 text-black';
+        modeLabel.className = 'text-xs font-bold text-slate-300';
+        modeLabel.innerText = 'نظام المبيعات والتوصيل والمحلات (Jordan Ops & CRM)';
+        swContainer.className = 'bg-slate-900 p-1.5 rounded-xl border border-slate-800 flex items-center gap-1.5 w-full lg:w-auto justify-center';
+        btnSourcing.className = 'flex-1 lg:flex-initial px-4 py-2 rounded-lg text-xs font-bold transition flex items-center justify-center gap-2 text-slate-300 hover:bg-slate-800';
+        btnOps.className = 'flex-1 lg:flex-initial px-4 py-2 rounded-lg text-xs font-bold transition flex items-center justify-center gap-2 bg-emerald-500 text-black shadow-sm';
+        telemetry.className = 'hidden xl:flex items-center gap-4 text-xs bg-slate-900 px-4 py-2 rounded-xl border border-slate-800 text-slate-200';
+
+        document.getElementById('subnav-sourcing').classList.add('hidden');
+        document.getElementById('subnav-ops').classList.remove('hidden');
+        document.getElementById('workspace-sourcing').classList.add('hidden');
+        document.getElementById('workspace-ops').classList.remove('hidden');
+      }
+    }
+
+    // Bridge active product from System 1 to System 2
+    function bridgeProductToOps() {
+      const prodName = document.getElementById('q-name').value || 'Structured Tote Bag';
+      const onlinePrice = parseFloat(document.getElementById('p-online').value) || 12;
+      const unitCost = parseFloat(document.getElementById('c-out-unit').innerText) || 3.30;
+
+      document.getElementById('cod-prod').value = prodName + ' (x1)';
+      document.getElementById('cod-total').value = (onlinePrice + 2).toFixed(2);
+      document.getElementById('wa-prod').value = prodName;
+      document.getElementById('wa-amount').value = (onlinePrice + 2).toFixed(2);
+      document.getElementById('ad-price').value = onlinePrice.toFixed(2);
+      document.getElementById('ad-cost').value = unitCost.toFixed(2);
+      document.getElementById('lbl-item').value = prodName + ' (x1)';
+      document.getElementById('lbl-cod').value = (onlinePrice + 2).toFixed(2) + ' JOD';
+      document.getElementById('spy-kw').value = prodName;
+
+      buildWaMsg();
+      calcRoas();
+      renderQrStudio();
+      switchMasterWorkspace('ops');
+    }
+
+    // =================================================================
+    // SYSTEM 1 FUNCTIONS (SOURCING & IMPORT)
+    // =================================================================
+    function openSourcingTab(tab) {
+      ['sop', 'quick', 'cost', 'profit', 'invoice', 'excel'].forEach(t => {
+        document.getElementById('ssec-' + t).classList.add('hidden');
+        document.getElementById('stab-' + t).classList.remove('active');
+      });
+      document.getElementById('ssec-' + tab).classList.remove('hidden');
+      document.getElementById('stab-' + tab).classList.add('active');
+      if (tab === 'invoice') renderInvoice();
+      if (tab === 'excel') renderExcel();
+    }
+
+    function setStars(n) {
+      currentStars = n;
+      document.querySelectorAll('#star-box .star-item').forEach((s, idx) => {
+        s.classList.toggle('active', idx < n);
+      });
+      document.getElementById('star-label').innerText = n + ' / 5';
+      runQuickCheck();
+    }
+
+    function starStr(n) {
+      return '★'.repeat(n) + '☆'.repeat(5 - n);
+    }
+
+    function runQuickCheck() {
+      const name = document.getElementById('q-name').value || 'منتج';
+      const curr = document.getElementById('q-currency').value;
+      const raw = parseFloat(document.getElementById('q-unit-price').value) || 0;
+      const ship = parseFloat(document.getElementById('q-est-ship').value) || 0;
+      const qty = parseInt(document.getElementById('q-qty').value) || 1;
+      const sellOn = parseFloat(document.getElementById('q-sell-online').value) || 0;
+      const sellWs = parseFloat(document.getElementById('q-sell-wholesale').value) || 0;
+      const trade = document.getElementById('q-trade').checked;
+
+      const unitJod = curr === 'USD' ? raw * 0.71 : raw;
+      const landed = unitJod + ship;
+      const cap = landed * qty;
+      const onMargin = sellOn - landed;
+      const wsMargin = sellWs - landed;
+
+      document.getElementById('q-out-cost').innerText = landed.toFixed(2) + ' JOD';
+      document.getElementById('q-out-cap').innerText = cap.toFixed(2) + ' JOD';
+      document.getElementById('q-out-on').innerText = (onMargin >= 0 ? '+' : '') + onMargin.toFixed(2) + ' JOD';
+      document.getElementById('q-out-ws').innerText = (wsMargin >= 0 ? '+' : '') + wsMargin.toFixed(2) + ' JOD';
+
+      const badge = document.getElementById('q-badge');
+      const advice = document.getElementById('q-advice');
+      if (onMargin >= 5 && wsMargin >= 1.5 && currentStars >= 3 && trade) {
+        badge.innerText = 'مربح ممتاز (WINNER)';
+        badge.className = 'px-3 py-1 rounded text-xs font-bold bg-emerald-400 text-black';
+        advice.innerText = 'المنتج يحقق هامش ربح قوي أونلاين وبالجملة، والمورد آمن.';
+      } else if (onMargin >= 3 && wsMargin >= 0.75) {
+        badge.innerText = 'متوسط - يحتاج تفاوض';
+        badge.className = 'px-3 py-1 rounded text-xs font-bold bg-amber-300 text-black';
+        advice.innerText = 'الربح مقبول لكن يفضل التفاوض مع المورد لتخفيض سعر المصنع.';
+      } else {
+        badge.innerText = 'ضعيف / خطر (SKIP)';
+        badge.className = 'px-3 py-1 rounded text-xs font-bold bg-red-500 text-white';
+        advice.innerText = 'تنبيه: هامش الربح ضعيف أو تقييم المنتج منخفض.';
+      }
+
+      document.getElementById('glob-product').innerText = name;
+    }
+
+    function pushQuickToLanded() {
+      const curr = document.getElementById('q-currency').value;
+      const raw = parseFloat(document.getElementById('q-unit-price').value) || 0;
+      const unitJod = curr === 'USD' ? raw * 0.71 : raw;
+      const qty = parseInt(document.getElementById('q-qty').value) || 50;
+      const ship = parseFloat(document.getElementById('q-est-ship').value) || 1;
+
+      document.getElementById('c-unit').value = unitJod.toFixed(2);
+      document.getElementById('c-qty').value = qty;
+      document.getElementById('c-intl').value = (ship * qty).toFixed(2);
+      document.getElementById('p-online').value = document.getElementById('q-sell-online').value;
+      document.getElementById('p-ws').value = document.getElementById('q-sell-wholesale').value;
+
+      calcLanded();
+      openSourcingTab('cost');
+    }
+
+    function calcVol() {
+      const l = parseFloat(document.getElementById('v-l').value) || 0;
+      const w = parseFloat(document.getElementById('v-w').value) || 0;
+      const h = parseFloat(document.getElementById('v-h').value) || 0;
+      const rate = parseFloat(document.getElementById('v-rate').value) || 0;
+      const kg = (l * w * h) / 5000;
+      document.getElementById('v-kg-label').innerText = 'الوزن الحجمي: ' + kg.toFixed(1) + ' kg';
+      document.getElementById('v-cost-out').innerText = (kg * rate).toFixed(2);
+    }
+
+    function applyVolToShip() {
+      document.getElementById('c-intl').value = document.getElementById('v-cost-out').innerText;
+      calcLanded();
+    }
+
+    function calcLanded() {
+      const unit = parseFloat(document.getElementById('c-unit').value) || 0;
+      const qty = parseInt(document.getElementById('c-qty').value) || 1;
+      const china = parseFloat(document.getElementById('c-china').value) || 0;
+      const intl = parseFloat(document.getElementById('c-intl').value) || 0;
+      const pack = parseFloat(document.getElementById('c-pack').value) || 0;
+      const feePct = parseFloat(document.getElementById('c-fee').value) || 0;
+
+      const goods = unit * qty;
+      const ship = china + intl;
+      const fee = (goods + china) * (feePct / 100);
+      const packTotal = pack * qty;
+      const total = goods + ship + fee + packTotal;
+      const perUnit = total / qty;
+
+      document.getElementById('c-out-unit').innerText = perUnit.toFixed(2) + ' JOD';
+      document.getElementById('c-out-goods').innerText = goods.toFixed(2) + ' JOD';
+      document.getElementById('c-out-ship').innerText = ship.toFixed(2) + ' JOD';
+      document.getElementById('c-out-extra').innerText = (fee + packTotal).toFixed(2) + ' JOD';
+      document.getElementById('c-out-total').innerText = total.toFixed(2) + ' JOD';
+      document.getElementById('glob-cost').innerText = perUnit.toFixed(2) + ' JOD';
+
+      calcProfit();
+    }
+
+    function calcProfit() {
+      const unitCost = parseFloat(document.getElementById('c-out-unit').innerText) || 0;
+      const qty = parseInt(document.getElementById('c-qty').value) || 1;
+      const totalCap = unitCost * qty;
+
+      const onPrice = parseFloat(document.getElementById('p-online').value) || 0;
+      const cpa = parseFloat(document.getElementById('p-cpa').value) || 0;
+      const ret = parseFloat(document.getElementById('p-ret').value) || 0;
+      const b2Price = parseFloat(document.getElementById('p-bundle2').value) || 0;
+      const wsPrice = parseFloat(document.getElementById('p-ws').value) || 0;
+
+      const onNet = onPrice - unitCost - cpa - ret;
+      const b2Net = b2Price - (unitCost * 2) - cpa - ret;
+      const wsNet = wsPrice - unitCost;
+      const beUnits = onPrice > 0 ? Math.ceil(totalCap / onPrice) : 0;
+
+      document.getElementById('p-out-on-net').innerText = onNet.toFixed(2) + ' JOD';
+      document.getElementById('p-out-b2-net').innerText = b2Net.toFixed(2) + ' JOD';
+      document.getElementById('p-out-be').innerText = 'بيع ' + beUnits + ' حبة من أصل ' + qty;
+      document.getElementById('p-out-ws-net').innerText = wsNet.toFixed(2) + ' JOD';
+      document.getElementById('p-out-ws-doz').innerText = (wsNet * 12).toFixed(2) + ' JOD';
+      document.getElementById('p-out-red').innerText = unitCost.toFixed(2) + ' JOD';
+    }
+
+    function goToInvoice() {
+      document.getElementById('inv-price').value = document.getElementById('p-ws').value;
+      document.getElementById('inv-retail').value = document.getElementById('p-online').value;
+      renderInvoice();
+      openSourcingTab('invoice');
+    }
+
+    function renderInvoice() {
+      const prod = document.getElementById('q-name').value || 'Structured Tote Bag';
+      const type = document.getElementById('inv-type').value;
+      const client = document.getElementById('inv-client').value;
+      const num = document.getElementById('inv-num').value;
+      const qty = parseInt(document.getElementById('inv-qty').value) || 1;
+      const price = parseFloat(document.getElementById('inv-price').value) || 0;
+      const retail = parseFloat(document.getElementById('inv-retail').value) || 0;
+      const notes = document.getElementById('inv-notes').value;
+
+      const total = qty * price;
+      const shopProfit = (retail - price) * qty;
+
+      document.getElementById('inv-out-type').innerText = type;
+      document.getElementById('inv-out-client').innerText = client;
+      document.getElementById('inv-out-num').innerText = num;
+      document.getElementById('inv-out-date').innerText = new Date().toISOString().split('T')[0];
+      document.getElementById('inv-out-prod').innerText = prod;
+      document.getElementById('inv-out-qty').innerText = qty;
+      document.getElementById('inv-out-price').innerText = price.toFixed(2) + ' JOD';
+      document.getElementById('inv-out-retail').innerText = retail.toFixed(2) + ' JOD';
+      document.getElementById('inv-out-total').innerText = total.toFixed(2) + ' JOD';
+      document.getElementById('inv-out-grand').innerText = total.toFixed(2) + ' JOD';
+      document.getElementById('inv-out-notes').innerText = notes;
+      document.getElementById('inv-out-shop-profit').innerText = (shopProfit > 0 ? shopProfit.toFixed(2) : '0.00') + ' JOD';
+    }
+
+    function downloadInvoicePDF() {
+      const el = document.getElementById('invoice-a4-sheet');
+      const num = document.getElementById('inv-num').value || 'DOSS-Invoice';
+      html2pdf().set({
+        margin: 10,
+        filename: num + '.pdf',
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2, useCORS: true },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+      }).from(el).save();
+    }
+
+    function downloadInvoicePNG() {
+      const el = document.getElementById('invoice-a4-sheet');
+      const num = document.getElementById('inv-num').value || 'DOSS-Invoice';
+      html2canvas(el, { scale: 2, useCORS: true }).then(canvas => {
+        const a = document.createElement('a');
+        a.href = canvas.toDataURL('image/png');
+        a.download = num + '.png';
+        a.click();
+      });
+    }
+
+    function printInvoiceA4() {
+      document.body.classList.add('printing-invoice');
+      window.print();
+      setTimeout(() => document.body.classList.remove('printing-invoice'), 500);
+    }
+
+    function saveToExcel() {
+      const item = {
+        id: Date.now(),
+        name: document.getElementById('q-name').value || 'منتج',
+        supplier: document.getElementById('q-supplier').value || '-',
+        stars: currentStars,
+        qty: parseInt(document.getElementById('c-qty').value) || 50,
+        landed: (parseFloat(document.getElementById('c-out-unit').innerText) || 0).toFixed(2),
+        onPrice: (parseFloat(document.getElementById('p-online').value) || 0).toFixed(2),
+        onProfit: (parseFloat(document.getElementById('p-out-on-net').innerText) || 0).toFixed(2),
+        wsPrice: (parseFloat(document.getElementById('p-ws').value) || 0).toFixed(2),
+        wsProfit: (parseFloat(document.getElementById('p-out-ws-net').innerText) || 0).toFixed(2)
+      };
+      savedProducts.unshift(item);
+      localStorage.setItem('doss_suite_products', JSON.stringify(savedProducts));
+      renderExcel();
+      openSourcingTab('excel');
+    }
+
+    function renderExcel() {
+      document.getElementById('saved-count').innerText = savedProducts.length;
+      const tbody = document.getElementById('excel-tbody');
+      if (savedProducts.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="10" class="py-8 text-center text-zinc-400">لا توجد منتجات محفوظة حالياً.</td></tr>';
+        return;
+      }
+      tbody.innerHTML = savedProducts.map(p => `
+        <tr class="border-b border-zinc-200 hover:bg-zinc-50">
+          <td class="py-3 px-3 font-bold">${p.name}</td>
+          <td class="py-3 px-3 font-en text-zinc-600">${p.supplier}</td>
+          <td class="py-3 px-3 text-center">${starStr(p.stars)}</td>
+          <td class="py-3 px-3 text-center font-en">${p.qty}</td>
+          <td class="py-3 px-3 text-center font-en font-bold">${p.landed} JOD</td>
+          <td class="py-3 px-3 text-center font-en">${p.onPrice} JOD</td>
+          <td class="py-3 px-3 text-center font-en font-bold text-emerald-700">${p.onProfit} JOD</td>
+          <td class="py-3 px-3 text-center font-en">${p.wsPrice} JOD</td>
+          <td class="py-3 px-3 text-center font-en font-bold">${p.wsProfit} JOD</td>
+          <td class="py-3 px-3 text-center">
+            <button onclick="deleteSavedProd(${p.id})" class="text-red-600 font-bold">✕</button>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    function deleteSavedProd(id) {
+      savedProducts = savedProducts.filter(p => p.id !== id);
+      localStorage.setItem('doss_suite_products', JSON.stringify(savedProducts));
+      renderExcel();
+    }
+
+    function clearSavedProducts() {
+      if (confirm('مسح كل المنتجات المحفوظة؟')) {
+        savedProducts = [];
+        localStorage.removeItem('doss_suite_products');
+        renderExcel();
+      }
+    }
+
+    function exportProductsExcel() {
+      if (savedProducts.length === 0) return alert('الجدول فارغ');
+      const headers = ['المنتج', 'المورد', 'التقييم', 'الكمية', 'التكلفة الصافية', 'سعر الأونلاين', 'ربح الأونلاين', 'سعر الجملة', 'ربح الجملة'];
+      const rows = savedProducts.map(p => [`"${p.name}"`, `"${p.supplier}"`, p.stars, p.qty, p.landed, p.onPrice, p.onProfit, p.wsPrice, p.wsProfit]);
+      const csv = '\uFEFF' + [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8;' }));
+      a.download = 'DOSS_UNIVERSE_Products.csv';
+      a.click();
+    }
+
+    // =================================================================
+    // SYSTEM 2 FUNCTIONS (JORDAN OPS & CRM)
+    // =================================================================
+    function openOpsTab(tab) {
+      ['cod', 'wa', 'crm', 'spy', 'qr'].forEach(t => {
+        document.getElementById('osec-' + t).classList.add('hidden');
+        document.getElementById('otab-' + t).classList.remove('active');
+      });
+      document.getElementById('osec-' + tab).classList.remove('hidden');
+      document.getElementById('otab-' + tab).classList.add('active');
+    }
+
+    function toJordanIntl(phone) {
+      let clean = (phone || '').replace(/\D/g, '');
+      if (clean.startsWith('07') && clean.length === 10) return '962' + clean.substring(1);
+      if (clean.startsWith('7') && clean.length === 9) return '962' + clean;
+      return clean || '962790000000';
+    }
+
+    function autoSetCodFee() {
+      const sel = document.getElementById('cod-city');
+      const fee = sel.options[sel.selectedIndex].getAttribute('data-fee') || 2;
+      document.getElementById('cod-fee').value = parseFloat(fee).toFixed(2);
+    }
+
+    function addCodOrder() {
+      codOrders.unshift({
+        id: Date.now(),
+        name: document.getElementById('cod-name').value.trim() || 'زبون جديد',
+        phone: document.getElementById('cod-phone').value.trim() || '0790000000',
+        city: document.getElementById('cod-city').value,
+        product: document.getElementById('cod-prod').value.trim() || 'منتج',
+        total: parseFloat(document.getElementById('cod-total').value) || 0,
+        fee: parseFloat(document.getElementById('cod-fee').value) || 0,
+        status: document.getElementById('cod-status').value,
+        date: new Date().toISOString().split('T')[0]
+      });
+      document.getElementById('cod-name').value = '';
+      document.getElementById('cod-phone').value = '';
+      renderCod();
+    }
+
+    function updateCodStatus(id, st) {
+      codOrders = codOrders.map(o => o.id === id ? { ...o, status: st } : o);
+      renderCod();
+    }
+
+    function deleteCod(id) {
+      codOrders = codOrders.filter(o => o.id !== id);
+      renderCod();
+    }
+
+    function settleAllDelivered() {
+      codOrders = codOrders.map(o => o.status === 'delivered' ? { ...o, status: 'settled' } : o);
+      renderCod();
+    }
+
+    function orderToWa(id) {
+      const o = codOrders.find(x => x.id === id);
+      if (!o) return;
+      document.getElementById('wa-name').value = o.name;
+      document.getElementById('wa-phone').value = o.phone;
+      document.getElementById('wa-prod').value = o.product;
+      document.getElementById('wa-amount').value = o.total.toFixed(2);
+      setWaTpl(o.status === 'pending' ? 'confirm' : 'out');
+      openOpsTab('wa');
+    }
+
+    function orderToLabel(id) {
+      const o = codOrders.find(x => x.id === id);
+      if (!o) return;
+      document.getElementById('lbl-name').value = o.name;
+      document.getElementById('lbl-phone').value = o.phone;
+      document.getElementById('lbl-city').value = o.city;
+      document.getElementById('lbl-cod').value = o.total.toFixed(2) + ' JOD';
+      document.getElementById('lbl-item').value = o.product;
+      renderQrStudio();
+      openOpsTab('qr');
+    }
+
+    function renderCod() {
+      localStorage.setItem('doss_suite_cod', JSON.stringify(codOrders));
+      let out = 0, due = 0, settled = 0, ret = 0, okCount = 0;
+
+      codOrders.forEach(o => {
+        const net = o.total - o.fee;
+        if (o.status === 'pending' || o.status === 'out') out++;
+        if (o.status === 'delivered') { due += net; okCount++; }
+        if (o.status === 'settled') { settled += net; okCount++; }
+        if (o.status === 'returned') ret++;
+      });
+
+      const rate = (okCount + ret) > 0 ? Math.round((okCount / (okCount + ret)) * 100) : 100;
+      document.getElementById('sum-out').innerText = out;
+      document.getElementById('sum-due').innerText = due.toFixed(2) + ' JOD';
+      document.getElementById('sum-settled').innerText = settled.toFixed(2) + ' JOD';
+      document.getElementById('sum-ret').innerText = ret;
+      document.getElementById('glob-cod').innerText = due.toFixed(2) + ' JOD';
+      document.getElementById('ops-bar-rate').innerText = rate + '%';
+
+      const tbody = document.getElementById('cod-tbody');
+      if (codOrders.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="6" class="py-8 text-center text-slate-500">لا توجد طرود مسجلة حالياً.</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = codOrders.map(o => `
+        <tr class="border-b border-slate-800/70 hover:bg-slate-800/30">
+          <td class="py-3 px-2">
+            <div class="font-bold text-white">${o.name}</div>
+            <div class="text-[11px] text-slate-400 font-en">${o.phone} • ${o.city}</div>
+          </td>
+          <td class="py-3 px-2 text-slate-300">${o.product}</td>
+          <td class="py-3 px-2 text-center font-en font-bold">${o.total.toFixed(2)} JOD</td>
+          <td class="py-3 px-2 text-center font-en font-bold text-emerald-400">${(o.total - o.fee).toFixed(2)} JOD</td>
+          <td class="py-3 px-2 text-center">
+            <select onchange="updateCodStatus(${o.id}, this.value)" class="text-xs py-1 px-2 rounded bg-slate-950 border border-slate-700">
+              <option value="pending" ${o.status === 'pending' ? 'selected' : ''}>⏳ بانتظار تأكيد</option>
+              <option value="out" ${o.status === 'out' ? 'selected' : ''}>🚚 مع المندوب</option>
+              <option value="delivered" ${o.status === 'delivered' ? 'selected' : ''}>✅ تم التسليم</option>
+              <option value="settled" ${o.status === 'settled' ? 'selected' : ''}>💰 مقبوض بالصندوق</option>
+              <option value="returned" ${o.status === 'returned' ? 'selected' : ''}>❌ مرتجع</option>
+            </select>
+          </td>
+          <td class="py-3 px-2 text-center">
+            <div class="flex items-center justify-center gap-1.5">
+              <button onclick="orderToWa(${o.id})" class="bg-emerald-500/20 text-emerald-300 hover:bg-emerald-500 hover:text-black px-2 py-1 rounded text-[11px] font-bold">💬 واتس</button>
+              <button onclick="orderToLabel(${o.id})" class="bg-indigo-500/20 text-indigo-300 hover:bg-indigo-500 hover:text-white px-2 py-1 rounded text-[11px] font-bold">🏷️ بوليصة</button>
+              <button onclick="deleteCod(${o.id})" class="text-rose-400 px-1.5 font-bold">✕</button>
+            </div>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    function exportCodCSV() {
+      if (codOrders.length === 0) return alert('لا توجد طرود');
+      const headers = ['التاريخ', 'الزبون', 'الهاتف', 'المنطقة', 'المنتج', 'التحصيل', 'التوصيل', 'الصافي', 'الحالة'];
+      const rows = codOrders.map(o => [o.date, `"${o.name}"`, o.phone, `"${o.city}"`, `"${o.product}"`, o.total, o.fee, (o.total - o.fee).toFixed(2), o.status]);
+      const csv = '\uFEFF' + [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8;' }));
+      a.download = 'DOSS_COD_Orders.csv';
+      a.click();
+    }
+
+    function setWaTpl(tpl) {
+      activeWaTpl = tpl;
+      ['confirm', 'out', 'rescue', 'vip', 'b2b'].forEach(t => {
+        document.getElementById('wtpl-' + t).className = (t === tpl)
+          ? 'w-full text-right p-3 rounded-xl border border-emerald-500 bg-emerald-500/10 text-xs font-bold flex justify-between'
+          : 'w-full text-right p-3 rounded-xl border border-slate-800 bg-slate-950 text-xs font-bold flex justify-between';
+      });
+      buildWaMsg();
+    }
+
+    function buildWaMsg() {
+      const name = document.getElementById('wa-name').value || 'عميلنا العزيز';
+      const phone = document.getElementById('wa-phone').value || '';
+      const prod = document.getElementById('wa-prod').value || 'المنتج';
+      const amt = document.getElementById('wa-amount').value || '0';
+
+      document.getElementById('wa-intl-preview').innerText = '+' + toJordanIntl(phone);
+
+      let msg = '';
+      if (activeWaTpl === 'confirm') {
+        msg = `مرحباً ${name} 🖤\nمعك فريق *DOSS UNIVERSE*.\n\nاستلمنا طلبك الخاص بـ: *${prod}*\nالقيمة الإجمالية شاملة التوصيل: *${amt} دينار* (الدفع عند الاستلام).\n\nلتجهيز طردك مع شركة التوصيل اليوم، يرجى الرد بكلمة *(تأكيد)* وإرسال الموقع (Location) أو العنوان بالتفصيل. ✨`;
+      } else if (activeWaTpl === 'out') {
+        msg = `أهلاً ${name} 🚚\nطردك (*${prod}*) من *DOSS UNIVERSE* خرج اليوم مع مندوب التوصيل!\n\nالمبلغ المطلوب عند الاستلام: *${amt} دينار*.\nيرجى إبقاء الهاتف متاحاً، المندوب سيتواصل معك قريباً. 🖤`;
+      } else if (activeWaTpl === 'rescue') {
+        msg = `مرحباً ${name} 👋\nمعك متجر *DOSS UNIVERSE*.\nحاول مندوب التوصيل الاتصال بك اليوم لتسليم طلبك (*${prod}*) ولم يتمكن من الوصول إليك.\n\nهل يناسبك إعادة جدولة التوصيل ليوم غد؟ 🙏`;
+      } else if (activeWaTpl === 'vip') {
+        msg = `أهلاً ${name} 🌟\nلأنك من عملاء *DOSS UNIVERSE* المميزين، جهزنالك كود خصم خاص بقيمة *15%* على أي طلب جديد: *(DOSS15)* 🎁\nرد على هذه الرسالة لنرسل لك التشكيلة الجديدة.`;
+      } else if (activeWaTpl === 'b2b') {
+        msg = `يعطيك العافية، معك قسم مبيعات الجملة والتوزيع من *DOSS UNIVERSE* 🤝\n\nيتوفر لدينا صنف (*${prod}*) بجودة عالية وهامش ربح ممتاز للمحلات التجارية مع إمكانية التوريد الفوري.\n\nهل يناسبك نرسل لك قائمة أسعار الجملة أو يمر عليك مندوبنا الميداني بالعينة؟`;
+      }
+      document.getElementById('wa-box').value = msg;
+    }
+
+    function sendWhatsAppNow() {
+      const intl = toJordanIntl(document.getElementById('wa-phone').value);
+      const txt = encodeURIComponent(document.getElementById('wa-box').value);
+      window.open(`https://wa.me/${intl}?text=${txt}`, '_blank');
+    }
+
+    function copyWaMsg() {
+      const box = document.getElementById('wa-box');
+      box.select();
+      document.execCommand('copy');
+      alert('تم نسخ نص الرسالة!');
+    }
+
+    function addShop() {
+      b2bShops.unshift({
+        id: Date.now(),
+        name: document.getElementById('shop-name').value.trim() || 'محل تجاري',
+        contact: document.getElementById('shop-contact').value.trim() || '-',
+        phone: document.getElementById('shop-phone').value.trim() || '0790000000',
+        area: document.getElementById('shop-area').value.trim() || 'عمّان',
+        status: document.getElementById('shop-status').value,
+        debt: parseFloat(document.getElementById('shop-debt').value) || 0,
+        note: document.getElementById('shop-note').value.trim() || '-'
+      });
+      document.getElementById('shop-name').value = '';
+      document.getElementById('shop-debt').value = '0';
+      renderShops();
+    }
+
+    function clearDebt(id) {
+      b2bShops = b2bShops.map(s => s.id === id ? { ...s, debt: 0 } : s);
+      renderShops();
+    }
+
+    function deleteShop(id) {
+      b2bShops = b2bShops.filter(s => s.id !== id);
+      renderShops();
+    }
+
+    function shopToWa(id) {
+      const s = b2bShops.find(x => x.id === id);
+      if (!s) return;
+      document.getElementById('wa-name').value = s.name;
+      document.getElementById('wa-phone').value = s.phone;
+      setWaTpl('b2b');
+      openOpsTab('wa');
+    }
+
+    function renderShops() {
+      localStorage.setItem('doss_suite_shops', JSON.stringify(b2bShops));
+      const filter = document.getElementById('crm-filter').value;
+      let totalDebt = 0;
+      b2bShops.forEach(s => totalDebt += (parseFloat(s.debt) || 0));
+      document.getElementById('ops-bar-debt').innerText = totalDebt.toFixed(2) + ' JOD';
+
+      let list = b2bShops;
+      if (filter === 'active') list = b2bShops.filter(s => s.status === 'active');
+      if (filter === 'warm') list = b2bShops.filter(s => s.status === 'warm');
+      if (filter === 'debt') list = b2bShops.filter(s => s.debt > 0);
+
+      const tbody = document.getElementById('crm-tbody');
+      if (list.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="6" class="py-8 text-center text-slate-500">لا توجد محلات مطابقة.</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = list.map(s => {
+        const badge = s.status === 'active'
+          ? '<span class="bg-emerald-500/20 text-emerald-300 px-2 py-0.5 rounded text-[11px] font-bold">🟢 عميل جملة</span>'
+          : s.status === 'warm'
+          ? '<span class="bg-amber-500/20 text-amber-300 px-2 py-0.5 rounded text-[11px] font-bold">🟡 مهتم / عينة</span>'
+          : '<span class="bg-rose-500/20 text-rose-300 px-2 py-0.5 rounded text-[11px] font-bold">🔴 غير مهتم</span>';
+
+        return `
+          <tr class="border-b border-slate-800/70 hover:bg-slate-800/30">
+            <td class="py-3 px-2">
+              <div class="font-bold text-white">${s.name}</div>
+              <a href="https://www.google.com/maps/search/${encodeURIComponent(s.name + ' ' + s.area)}" target="_blank" class="text-[11px] text-indigo-400 hover:underline">📍 ${s.area}</a>
+            </td>
+            <td class="py-3 px-2">
+              <div>${s.contact}</div>
+              <div class="font-en text-[11px] text-slate-400">${s.phone}</div>
+            </td>
+            <td class="py-3 px-2 text-center">${badge}</td>
+            <td class="py-3 px-2 text-center font-en font-bold ${s.debt > 0 ? 'text-amber-400' : 'text-slate-500'}">${parseFloat(s.debt).toFixed(2)} JOD</td>
+            <td class="py-3 px-2 text-slate-300">${s.note}</td>
+            <td class="py-3 px-2 text-center">
+              <div class="flex items-center justify-center gap-1.5">
+                <button onclick="shopToWa(${s.id})" class="bg-emerald-500/20 text-emerald-300 hover:bg-emerald-500 hover:text-black px-2 py-1 rounded text-[11px] font-bold">💬 واتس</button>
+                ${s.debt > 0 ? `<button onclick="clearDebt(${s.id})" class="bg-amber-500/20 text-amber-300 px-2 py-1 rounded text-[11px] font-bold">تصفير</button>` : ''}
+                <button onclick="deleteShop(${s.id})" class="text-rose-400 px-1.5 font-bold">✕</button>
+              </div>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function openSpy(type) {
+      const kw = encodeURIComponent(document.getElementById('spy-kw').value.trim() || 'Tote Bag');
+      const urls = {
+        meta: `https://www.facebook.com/ads/library/?active_status=active&ad_type=all&country=JO&q=${kw}`,
+        tiktok: `https://ads.tiktok.com/business/creativecenter/inspiration/topads/pc/en?keyword=${kw}`,
+        alibaba: `https://www.alibaba.com/trade/search?SearchText=${kw}&ta=y&verifiedManufactory=y`,
+        aliexpress: `https://www.aliexpress.com/w/wholesale-${kw.replace(/%20/g, '-')}.html?sortType=total_tranpro_desc`
+      };
+      window.open(urls[type], '_blank');
+    }
+
+    function calcRoas() {
+      const spend = parseFloat(document.getElementById('ad-spend').value) || 0;
+      const orders = parseInt(document.getElementById('ad-orders').value) || 0;
+      const price = parseFloat(document.getElementById('ad-price').value) || 0;
+      const cost = parseFloat(document.getElementById('ad-cost').value) || 0;
+
+      const rev = orders * price;
+      const cpa = orders > 0 ? spend / orders : spend;
+      const roas = spend > 0 ? rev / spend : 0;
+      const net = rev - (orders * cost) - spend;
+
+      document.getElementById('ad-out-cpa').innerText = cpa.toFixed(2) + ' JOD';
+      document.getElementById('ad-out-roas').innerText = roas.toFixed(2) + 'x';
+      document.getElementById('ad-out-net').innerText = (net >= 0 ? '+' : '') + net.toFixed(2) + ' JOD';
+
+      const v = document.getElementById('ad-verdict');
+      if (net > 10) {
+        v.className = 'mt-4 p-3.5 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 text-xs font-bold';
+        v.innerText = 'قرار الحملة: إعلان رابح جداً! استمر في تشغيل الحملة.';
+      } else if (net > 0) {
+        v.className = 'mt-4 p-3.5 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-300 text-xs font-bold';
+        v.innerText = 'قرار الحملة: ربح محدود؛ جرب تحسين بداية الفيديو أو تفعيل عرض الحبتين.';
+      } else {
+        v.className = 'mt-4 p-3.5 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-300 text-xs font-bold';
+        v.innerText = 'قرار الحملة: الحملة تخسر كاش! أوقف الإعلان فوراً.';
+      }
+    }
+
+    function renderQrStudio() {
+      const intl = toJordanIntl(document.getElementById('qr-phone').value);
+      const code = document.getElementById('qr-code').value || 'DOSS15';
+      const disc = document.getElementById('qr-disc').value || '15%';
+      const waUrl = `https://wa.me/${intl}?text=${encodeURIComponent(`مرحباً DOSS UNIVERSE 🖤 استلمت طلبي وأريد تفعيل كود الخصم (${code}) بقيمة ${disc}!`)}`;
+
+      document.getElementById('qr-img').src = `https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=${encodeURIComponent(waUrl)}`;
+      document.getElementById('qr-out-code').innerText = code;
+      document.getElementById('qr-out-disc').innerText = disc;
+
+      document.getElementById('lbl-out-name').innerText = document.getElementById('lbl-name').value;
+      document.getElementById('lbl-out-phone').innerText = document.getElementById('lbl-phone').value;
+      document.getElementById('lbl-out-city').innerText = document.getElementById('lbl-city').value;
+      document.getElementById('lbl-out-cod').innerText = document.getElementById('lbl-cod').value;
+      document.getElementById('lbl-out-item').innerText = document.getElementById('lbl-item').value;
+    }
+
+    function printLabels() {
+      document.body.classList.add('printing-labels');
+      window.print();
+      setTimeout(() => document.body.classList.remove('printing-labels'), 500);
+    }
+
+    // Initialize Demo Data
+    window.onload = function() {
+      if (savedProducts.length === 0) {
+        savedProducts.push({
+          id: 1,
+          name: 'Structured Tote Bag',
+          supplier: 'Baoding Rain Bags Co., Ltd.',
+          stars: 4,
+          qty: 50,
+          landed: '3.30',
+          onPrice: '12.00',
+          onProfit: '5.85',
+          wsPrice: '5.50',
+          wsProfit: '2.20'
+        });
+        localStorage.setItem('doss_suite_products', JSON.stringify(savedProducts));
+      }
+      if (codOrders.length === 0) {
+        codOrders = [
+          { id: 101, name: 'سارة أحمد', phone: '0791234567', city: 'عمّان', product: 'Structured Tote Bag - White (x1)', total: 14.00, fee: 2.00, status: 'delivered', date: '2026-10-29' },
+          { id: 102, name: 'رنا الخطيب', phone: '0789876543', city: 'إربد', product: 'Structured Tote Bag - Black (x2)', total: 22.00, fee: 3.00, status: 'out', date: '2026-10-29' }
+        ];
+        localStorage.setItem('doss_suite_cod', JSON.stringify(codOrders));
+      }
+      if (b2bShops.length === 0) {
+        b2bShops = [
+          { id: 201, name: 'معرض الأناقة للحقائب', contact: 'أبو طارق', phone: '0795554433', area: 'عمّان - الصويفية', status: 'active', debt: 45, note: 'اشترى درزنين وبقي عليه 45 دينار للأحد' },
+          { id: 202, name: 'بوتيك لافندر', contact: 'عمر', phone: '0776665544', area: 'عمّان - الجاردنز', status: 'warm', debt: 0, note: 'أعجبته العينة البيضاء، نراجعه أول الشهر' }
+        ];
+        localStorage.setItem('doss_suite_shops', JSON.stringify(b2bShops));
+      }
+
+      runQuickCheck();
+      calcVol();
+      calcLanded();
+      renderInvoice();
+      renderExcel();
+      renderCod();
+      buildWaMsg();
+      renderShops();
+      calcRoas();
+      renderQrStudio();
+    };
+  </script>
+</body>
+</html>
